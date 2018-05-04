@@ -19,6 +19,7 @@ Place, Fifth Floor, Boston, MA  02110 - 1301  USA
 
 #define GLM_FORCE_RADIANS
 
+#include <iostream>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
@@ -31,12 +32,21 @@ Place, Fifth Floor, Boston, MA  02110 - 1301  USA
 #include "lodepng.h"
 #include "shaderprogram.h"
 
+
 using namespace glm;
 
 float speed_x = 0; // [radiany/s]
 float speed_y = 0; // [radiany/s]
 
-float aspect=1; //Stosunek szerokości do wysokości okna
+int global_width = 1024;
+int global_height = 768;
+
+float aspect = (float)global_width/global_height; //Stosunek szerokości do wysokości okna
+
+float horizontalAngle = 3.14f; // horizontal angle : toward -Z
+float verticalAngle = 0.0f; // vertical angle : 0, look at the horizon
+
+float mouseSpeed = 0.5f;
 
 //Uchwyty na shadery
 ShaderProgram *shaderProgram; //Wskaźnik na obiekt reprezentujący program cieniujący.
@@ -68,19 +78,20 @@ void error_callback(int error, const char* description) {
 //Procedura obsługi klawiatury
 void key_callback(GLFWwindow* window, int key,
 	int scancode, int action, int mods) {
+
 	if (action == GLFW_PRESS) {
-		if (key == GLFW_KEY_LEFT) speed_y = -3.14;
-		if (key == GLFW_KEY_RIGHT) speed_y = 3.14;
-		if (key == GLFW_KEY_UP) speed_x = -3.14;
-		if (key == GLFW_KEY_DOWN) speed_x = 3.14;
+		if (key == GLFW_KEY_A) speed_y = -3.14;
+		if (key == GLFW_KEY_D) speed_y = 3.14;
+		if (key == GLFW_KEY_W) speed_x = -3.14;
+		if (key == GLFW_KEY_S) speed_x = 3.14;
+		if (key == GLFW_KEY_ESCAPE) glfwSetWindowShouldClose(window, GLFW_TRUE);
 	}
 
-
 	if (action == GLFW_RELEASE) {
-		if (key == GLFW_KEY_LEFT) speed_y = 0;
-		if (key == GLFW_KEY_RIGHT) speed_y = 0;
-		if (key == GLFW_KEY_UP) speed_x = 0;
-		if (key == GLFW_KEY_DOWN) speed_x = 0;
+		if (key == GLFW_KEY_A) speed_y = 0;
+		if (key == GLFW_KEY_D) speed_y = 0;
+		if (key == GLFW_KEY_W) speed_x = 0;
+		if (key == GLFW_KEY_S) speed_x = 0;
 	}
 }
 
@@ -135,7 +146,7 @@ void prepareObject(ShaderProgram *shaderProgram) {
 //Procedura inicjująca
 void initOpenGLProgram(GLFWwindow* window) {
 	//************Tutaj umieszczaj kod, który należy wykonać raz, na początku programu************
-	glClearColor(0, 0, 0, 1); //Czyść ekran na czarno
+	glClearColor(0, 0, 0, 0.4); //Czyść ekran na czarno
 	glEnable(GL_DEPTH_TEST); //Włącz używanie Z-Bufora
 	glfwSetKeyCallback(window, key_callback); //Zarejestruj procedurę obsługi klawiatury
     glfwSetFramebufferSizeCallback(window,windowResize); //Zarejestruj procedurę obsługi zmiany rozmiaru bufora ramki
@@ -186,23 +197,65 @@ void drawObject(GLuint vao, ShaderProgram *shaderProgram, mat4 mP, mat4 mV, mat4
 }
 
 //Procedura rysująca zawartość sceny
-void drawScene(GLFWwindow* window, float angle_x, float angle_y) {
+void drawScene(GLFWwindow* window, float angle_x, float angle_y, double deltaTime) {
 	//************Tutaj umieszczaj kod rysujący obraz******************l
 
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT); //Wykonaj czyszczenie bufora kolorów
 
 	glm::mat4 P = glm::perspective(50 * PI / 180, aspect, 1.0f, 50.0f); //Wylicz macierz rzutowania
 
+	/***
 	glm::mat4 V = glm::lookAt( //Wylicz macierz widoku
 		glm::vec3(0.0f, 0.0f, -5.0f),
 		glm::vec3(0.0f, 0.0f, 0.0f),
 		glm::vec3(0.0f, 1.0f, 0.0f));
 
-
 	//Wylicz macierz modelu rysowanego obiektu
 	glm::mat4 M = glm::mat4(1.0f);
 	M = glm::rotate(M, angle_x, glm::vec3(1, 0, 0));
 	M = glm::rotate(M, angle_y, glm::vec3(0, 1, 0));
+	***/
+
+	glm::mat4 M = glm::mat4(1.0f);
+
+	glm::vec3 position = glm::vec3( 0, 0, 5 );
+
+    ///mouse positioning
+    double xpos, ypos;
+    glfwGetCursorPos(window, &xpos, &ypos);
+    //std::cout<<xpos<<" "<<ypos<<std::endl;
+
+    horizontalAngle += mouseSpeed * deltaTime * float(global_width/2 - xpos )*1.0e4;
+    verticalAngle   += mouseSpeed * deltaTime * float(global_height/2 - ypos )*1.0e4;
+
+    glfwSetCursorPos(window, global_width/2, global_height/2);
+
+    //std::cout<<horizontalAngle<<" "<<verticalAngle<<std::endl;
+
+    glm::vec3 direction(
+        cos(verticalAngle) * sin(horizontalAngle),
+        sin(verticalAngle),
+        cos(verticalAngle) * cos(horizontalAngle)
+    );
+
+    glm::vec3 right = glm::vec3(
+        sin(horizontalAngle - 3.14f/2.0f),
+        0,
+        cos(horizontalAngle - 3.14f/2.0f)
+    );
+
+    glm::vec3 up = glm::cross( right, direction );
+
+    position -= direction * angle_x;
+    position += right * angle_y;
+
+    ///***end***///
+
+	glm::mat4 V = glm::lookAt(
+        position,           // Camera is here
+        position+direction, // and looks here : at the same position, plus "direction"
+        up                  // Head is up (set to 0,-1,0 to look upside-down)
+    );
 
 	//Narysuj obiekt
 	drawObject(vao,shaderProgram,P,V,M);
@@ -225,7 +278,7 @@ int main(void)
 		exit(EXIT_FAILURE);
 	}
 
-	window = glfwCreateWindow(500, 500, "OpenGL", NULL, NULL);  //Utwórz okno 500x500 o tytule "OpenGL" i kontekst OpenGL.
+	window = glfwCreateWindow(global_width, global_height, "OpenGL", NULL, NULL);  //Utwórz okno 500x500 o tytule "OpenGL" i kontekst OpenGL.
 
 	if (!window) //Jeżeli okna nie udało się utworzyć, to zamknij program
 	{
@@ -248,6 +301,7 @@ int main(void)
 	float angle_y = 0; //Kąt obrotu obiektu
 
 	glfwSetTime(0); //Wyzeruj licznik czasu
+	glfwSetCursorPos(window, global_width/2, global_height/2); //wysrodkuj mysz
 
 	//Główna pętla
 	while (!glfwWindowShouldClose(window)) //Tak długo jak okno nie powinno zostać zamknięte
@@ -255,7 +309,7 @@ int main(void)
 		angle_x += speed_x*glfwGetTime(); //Zwiększ kąt o prędkość kątową razy czas jaki upłynął od poprzedniej klatki
 		angle_y += speed_y*glfwGetTime(); //Zwiększ kąt o prędkość kątową razy czas jaki upłynął od poprzedniej klatki
 		glfwSetTime(0); //Wyzeruj licznik czasu
-		drawScene(window,angle_x,angle_y); //Wykonaj procedurę rysującą
+		drawScene(window,angle_x,angle_y,glfwGetTime()); //Wykonaj procedurę rysującą
 		glfwPollEvents(); //Wykonaj procedury callback w zalezności od zdarzeń jakie zaszły.
 	}
 

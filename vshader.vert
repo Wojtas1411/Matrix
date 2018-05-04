@@ -16,7 +16,7 @@ out vec4 iC; //Kolor wyliczony w vertex shaderze
 
 void main(void) {
 
-    vec4 lp=vec4(0,0,-6,1); //Wspolrzedne swiatla w przestrzeni swiata
+    vec4 lp=vec4(0,0,6,1); //Wspolrzedne swiatla w przestrzeni swiata
 
     vec4 ka=vec4(0,0,0,0); //Kolor obiektu w swietle otoczenia
     vec4 kd=color; //Kolor obiektu w swietle rozproszonym
