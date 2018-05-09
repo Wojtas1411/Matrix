@@ -12,6 +12,11 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <stdlib.h>
 #include <stdio.h>
+#include "constants.h"
+#include "allmodels.h"
+#include "lodepng.h"
+#include "shaderprogram.h"
+#include "OpenGlFunctions.h"
 
 using namespace glm;
 
@@ -23,7 +28,9 @@ class ModelHolder
         //ModelHolder(std::string name, std::string path);
         virtual ~ModelHolder();
 
-        void drawMe();
+        void drawObject(mat4 mP, mat4 mV, mat4 mM);
+        void setGlobalColor(float r, float g, float b, float a);
+
 
     protected:
         bool loadFromOBJ(std::string path);
@@ -38,6 +45,8 @@ class ModelHolder
 		float *texCoords;
 		float *colors;
 
+		ShaderProgram *shaderProgram;
+
 		GLuint vao;
         GLuint bufVertices; //Uchwyt na bufor VBO przechowuj¹cy tablicê wspó³rzêdnych wierzcho³ków
         GLuint bufColors;  //Uchwyt na bufor VBO przechowuj¹cy tablicê kolorów
@@ -48,6 +57,7 @@ class ModelHolder
         std::vector<int> whichNormal;
 
         void parseF(std::string line);
+        void prepareObject();
 };
 
 #endif // MODELHOLDER_H

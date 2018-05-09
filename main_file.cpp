@@ -31,6 +31,8 @@ Place, Fifth Floor, Boston, MA  02110 - 1301  USA
 #include "allmodels.h"
 #include "lodepng.h"
 #include "shaderprogram.h"
+#include "ModelHolder.h"
+#include "OpenGlFunctions.h"
 
 
 using namespace glm;
@@ -64,10 +66,10 @@ float* normals=Models::CubeInternal::normals;
 int vertexCount=Models::CubeInternal::vertexCount;*/
 
 //Czajnik
-float* vertices=Models::TeapotInternal::vertices;
-float* colors=Models::TeapotInternal::colors;
-float* normals=Models::TeapotInternal::vertexNormals;
-int vertexCount=Models::TeapotInternal::vertexCount;
+float* vertices = Models::TeapotInternal::vertices;
+float* colors = Models::TeapotInternal::colors;
+float* normals = Models::TeapotInternal::vertexNormals;
+int vertexCount = Models::TeapotInternal::vertexCount;
 
 
 //Procedura obsługi błędów
@@ -103,25 +105,6 @@ void windowResize(GLFWwindow* window, int width, int height) {
     } else {
         aspect=1;
     }
-}
-
-//Tworzy bufor VBO z tablicy
-GLuint makeBuffer(void *data, int vertexCount, int vertexSize) {
-	GLuint handle;
-
-	glGenBuffers(1,&handle);//Wygeneruj uchwyt na Vertex Buffer Object (VBO), który będzie zawierał tablicę danych
-	glBindBuffer(GL_ARRAY_BUFFER,handle);  //Uaktywnij wygenerowany uchwyt VBO
-	glBufferData(GL_ARRAY_BUFFER, vertexCount*vertexSize, data, GL_STATIC_DRAW);//Wgraj tablicę do VBO
-
-	return handle;
-}
-
-//Przypisuje bufor VBO do atrybutu
-void assignVBOtoAttribute(ShaderProgram *shaderProgram,const char* attributeName, GLuint bufVBO, int vertexSize) {
-	GLuint location=shaderProgram->getAttribLocation(attributeName); //Pobierz numer slotu dla atrybutu
-	glBindBuffer(GL_ARRAY_BUFFER,bufVBO);  //Uaktywnij uchwyt VBO
-	glEnableVertexAttribArray(location); //Włącz używanie atrybutu o numerze slotu zapisanym w zmiennej location
-	glVertexAttribPointer(location,vertexSize,GL_FLOAT, GL_FALSE, 0, NULL); //Dane do slotu location mają być brane z aktywnego VBO
 }
 
 //Przygotowanie do rysowania pojedynczego obiektu
@@ -197,7 +180,7 @@ void drawObject(GLuint vao, ShaderProgram *shaderProgram, mat4 mP, mat4 mV, mat4
 }
 
 //Procedura rysująca zawartość sceny
-void drawScene(GLFWwindow* window, float angle_x, float angle_y, double deltaTime) {
+void drawScene(GLFWwindow* window, float angle_x, float angle_y, double deltaTime, ModelHolder* x) {
 	//************Tutaj umieszczaj kod rysujący obraz******************l
 
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT); //Wykonaj czyszczenie bufora kolorów
@@ -223,14 +206,10 @@ void drawScene(GLFWwindow* window, float angle_x, float angle_y, double deltaTim
     ///mouse positioning
     double xpos, ypos;
     glfwGetCursorPos(window, &xpos, &ypos);
-    //std::cout<<xpos<<" "<<ypos<<std::endl;
 
     horizontalAngle += mouseSpeed * deltaTime * float(global_width/2 - xpos )*1.0e4;
     verticalAngle   += mouseSpeed * deltaTime * float(global_height/2 - ypos )*1.0e4;
-
     glfwSetCursorPos(window, global_width/2, global_height/2);
-
-    //std::cout<<horizontalAngle<<" "<<verticalAngle<<std::endl;
 
     glm::vec3 direction(
         cos(verticalAngle) * sin(horizontalAngle),
@@ -257,8 +236,10 @@ void drawScene(GLFWwindow* window, float angle_x, float angle_y, double deltaTim
         up                  // Head is up (set to 0,-1,0 to look upside-down)
     );
 
+    x->drawObject(P,V,M);
+
 	//Narysuj obiekt
-	drawObject(vao,shaderProgram,P,V,M);
+	///drawObject(vao,shaderProgram,P,V,M);
 
 	//Przerzuć tylny bufor na przedni
 	glfwSwapBuffers(window);
@@ -303,15 +284,32 @@ int main(void)
 	glfwSetTime(0); //Wyzeruj licznik czasu
 	glfwSetCursorPos(window, global_width/2, global_height/2); //wysrodkuj mysz
 
+	///***-----Polygon-----***///
+	std::cout<<"Polygon start"<<std::endl;
+
+	ModelHolder *x = new ModelHolder();
+	x->setGlobalColor(1,0,0,1);
+
+    std::cout<<"Polygon end"<<std::endl;
+	///***------end------***///
+
+
 	//Główna pętla
 	while (!glfwWindowShouldClose(window)) //Tak długo jak okno nie powinno zostać zamknięte
 	{
 		angle_x += speed_x*glfwGetTime(); //Zwiększ kąt o prędkość kątową razy czas jaki upłynął od poprzedniej klatki
 		angle_y += speed_y*glfwGetTime(); //Zwiększ kąt o prędkość kątową razy czas jaki upłynął od poprzedniej klatki
 		glfwSetTime(0); //Wyzeruj licznik czasu
-		drawScene(window,angle_x,angle_y,glfwGetTime()); //Wykonaj procedurę rysującą
+		drawScene(window,angle_x,angle_y,glfwGetTime(),x); //Wykonaj procedurę rysującą
 		glfwPollEvents(); //Wykonaj procedury callback w zalezności od zdarzeń jakie zaszły.
 	}
+
+
+	///***-----DeleteHolder-----***///
+
+	delete x;
+
+	///***------end------***///
 
 	freeOpenGLProgram();
 

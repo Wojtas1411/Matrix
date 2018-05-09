@@ -14,6 +14,9 @@ ModelHolder::ModelHolder()
     this->vertexNormals = nullptr;
     this->texCoords = nullptr;
     this->colors = nullptr;
+
+    shaderProgram = new ShaderProgram("vshader.vert",NULL,"fshader.frag");
+    prepareObject();
 }
 
 ModelHolder::~ModelHolder()
@@ -26,10 +29,10 @@ ModelHolder::~ModelHolder()
     delete[] colors;
 
 
-    glDeleteVertexArrays(1,&this->vao); //Usuni阠ie vao
-	glDeleteBuffers(1,&this->bufVertices); //Usuni阠ie VBO z wierzcho砶ami
-	glDeleteBuffers(1,&this->bufColors); //Usuni阠ie VBO z kolorami
-	glDeleteBuffers(1,&this->bufNormals); //Usuni阠ie VBO z wektorami normalnymi
+    glDeleteVertexArrays(1,&this->vao); //Usuni锚cie vao
+	glDeleteBuffers(1,&this->bufVertices); //Usuni锚cie VBO z wierzcho鲁kami
+	glDeleteBuffers(1,&this->bufColors); //Usuni锚cie VBO z kolorami
+	glDeleteBuffers(1,&this->bufNormals); //Usuni锚cie VBO z wektorami normalnymi
     std::cout<<"Destructor finished"<<std::endl;
 }
 
@@ -154,20 +157,18 @@ bool ModelHolder::loadFromOBJ(std::string path){
     in.close();
     std::cout<<"Reading finished"<<std::endl;
     ///TODO process data
-    std::cout<<whichVertex.size()<<std::endl;
-    std::cout<<whichTexCord.size()<<std::endl;
-    std::cout<<whichNormal.size()<<std::endl;
+    //std::cout<<whichVertex.size()<<std::endl;
+    //std::cout<<whichTexCord.size()<<std::endl;
+    //std::cout<<whichNormal.size()<<std::endl;
 
     vertices = new float[whichVertex.size()*4];
     texCoords = new float[whichTexCord.size()*2];
     normals = new float[whichNormal.size()*4];
 
-    for(int i=0;i<whichVertex.size();i++)std::cout<<whichVertex[i]<<std::endl;std::cout<<std::endl;
+    vertexCount = whichVertex.size()*4;
 
-    vertexCount = whichVertex.size();
-
-    for(int i=0; i<vertexCount; i++){
-        std::cout<<whichVertex[i]<<std::endl;
+    for(int i=0; i<(int)whichVertex.size(); i++){
+        //std::cout<<whichVertex[i]<<std::endl;
         for(int j=0;j<3;j++){
             vertices[4*i+j] = tmp_vertices[whichVertex[i]*3+j];
             normals[4*i+j] = tmp_normals[whichNormal[i]*3+j];
@@ -177,10 +178,6 @@ bool ModelHolder::loadFromOBJ(std::string path){
         for(int j=0;j<2;j++){
             texCoords[2*i+j] = tmp_texCoords[whichTexCord[i]*2+j];
         }
-    }
-
-    for(int i=0;i<vertexCount;i++){
-        std::cout<<vertices[4*i]<<" "<<vertices[4*i+1]<<" "<<vertices[4*i+2]<<" "<<vertices[4*i+3]<<std::endl;
     }
 
     std::cout<<"Parsing finished"<<std::endl;
@@ -197,7 +194,47 @@ bool ModelHolder::loadFromOBJ(std::string path){
     return true;
 }
 
-void ModelHolder::drawMe(){
+void ModelHolder::setGlobalColor(float r, float g, float b, float a){
+    if(colors == nullptr){
+        colors = new float[vertexCount];
+    }
+    for(int i=0;i<vertexCount/4;i++){
+        colors[i*4+0] = r;
+        colors[i*4+1] = g;
+        colors[i*4+2] = b;
+        colors[i*4+3] = a;
+    }
+}
 
+void ModelHolder::drawObject(mat4 mP, mat4 mV, mat4 mM){
+	shaderProgram->use();
+
+	glUniformMatrix4fv(shaderProgram->getUniformLocation("P"),1, false, glm::value_ptr(mP));
+	glUniformMatrix4fv(shaderProgram->getUniformLocation("V"),1, false, glm::value_ptr(mV));
+	glUniformMatrix4fv(shaderProgram->getUniformLocation("M"),1, false, glm::value_ptr(mM));
+
+	glBindVertexArray(vao);
+
+	glDrawArrays(GL_TRIANGLES,0,vertexCount);
+
+	glBindVertexArray(0);
+}
+
+void ModelHolder::prepareObject(){
+    //Zbuduj VBO z danymi obiektu do narysowania
+	bufVertices=makeBuffer(vertices, vertexCount, sizeof(float)*4); //VBO ze wsp贸艂rz臋dnymi wierzcho艂k贸w
+	bufColors=makeBuffer(colors, vertexCount, sizeof(float)*4);//VBO z kolorami wierzcho艂k贸w
+	bufNormals=makeBuffer(normals, vertexCount, sizeof(float)*4);//VBO z wektorami normalnymi wierzcho艂k贸w
+
+	//Zbuduj VAO wi膮偶膮cy atrybuty z konkretnymi VBO
+	glGenVertexArrays(1,&vao); //Wygeneruj uchwyt na VAO i zapisz go do zmiennej globalnej
+
+	glBindVertexArray(vao); //Uaktywnij nowo utworzony VAO
+
+	assignVBOtoAttribute(shaderProgram,"vertex",bufVertices,4); //"vertex" odnosi si臋 do deklaracji "in vec4 vertex;" w vertex shaderze
+	assignVBOtoAttribute(shaderProgram,"color",bufColors,4); //"color" odnosi si臋 do deklaracji "in vec4 color;" w vertex shaderze
+	assignVBOtoAttribute(shaderProgram,"normal",bufNormals,4); //"normal" odnosi si臋 do deklaracji "in vec4 normal;" w vertex shaderze
+
+	glBindVertexArray(0); //Dezaktywuj VAO
 
 }

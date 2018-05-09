@@ -13,6 +13,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add directory="include" />
 				</Compiler>
 			</Target>
 			<Target title="Release">
@@ -22,6 +23,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add directory="include" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -51,6 +53,7 @@
 		<Unit filename="cube.cpp" />
 		<Unit filename="cube.h" />
 		<Unit filename="fshader.frag" />
+		<Unit filename="include/ModelHolder.h" />
 		<Unit filename="lodepng.cpp" />
 		<Unit filename="lodepng.h" />
 		<Unit filename="main_file.cpp" />
@@ -58,6 +61,7 @@
 		<Unit filename="model.h" />
 		<Unit filename="shaderprogram.cpp" />
 		<Unit filename="shaderprogram.h" />
+		<Unit filename="src/ModelHolder.cpp" />
 		<Unit filename="teapot.cpp" />
 		<Unit filename="teapot.h" />
 		<Unit filename="torus.h" />
