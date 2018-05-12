@@ -2,18 +2,19 @@
 
 ModelHolder::ModelHolder()
 {
-    //ctor
-    std::cout<<"hello there"<<std::endl;
-    if(loadFromOBJ("test.obj")){
-        std::cout<<"yep"<<std::endl;
-    } else {
-        std::cout<<"nope"<<std::endl;
-    }
+
     this->vertices = nullptr;
     this->normals = nullptr;
     this->vertexNormals = nullptr;
     this->texCoords = nullptr;
     this->colors = nullptr;
+
+    std::cout<<"hello there"<<std::endl;
+    if(loadFromOBJ("test2.obj")){
+        std::cout<<"yep"<<std::endl;
+    } else {
+        std::cout<<"nope"<<std::endl;
+    }
 
     shaderProgram = new ShaderProgram("vshader.vert",NULL,"fshader.frag");
     prepareObject();
@@ -23,10 +24,17 @@ ModelHolder::~ModelHolder()
 {
     std::cout<<"Destructor started"<<std::endl;
     delete[] this->vertices;
-    delete[] normals;
-    delete[] vertexNormals;
-    delete[] texCoords;
-    delete[] colors;
+    std::cout<<"vertices deleted"<<std::endl;
+    delete[] this->normals;
+    std::cout<<"normals deleted"<<std::endl;
+    delete[] this->vertexNormals;
+    std::cout<<"VN deleted"<<std::endl;
+    delete[] this->texCoords;
+    std::cout<<"texC deleted"<<std::endl;
+    delete[] this->colors;
+    std::cout<<"colors deleted"<<std::endl;
+
+    std::cout<<"tabs deleted"<<std::endl;
 
 
     glDeleteVertexArrays(1,&this->vao); //Usuniêcie vao
@@ -156,29 +164,29 @@ bool ModelHolder::loadFromOBJ(std::string path){
     }
     in.close();
     std::cout<<"Reading finished"<<std::endl;
-    ///TODO process data
-    //std::cout<<whichVertex.size()<<std::endl;
-    //std::cout<<whichTexCord.size()<<std::endl;
-    //std::cout<<whichNormal.size()<<std::endl;
 
-    vertices = new float[whichVertex.size()*4];
-    texCoords = new float[whichTexCord.size()*2];
-    normals = new float[whichNormal.size()*4];
+    this->vertices = new float[whichVertex.size()*4];
+    this->texCoords = new float[whichTexCord.size()*2];
+    this->normals = new float[whichNormal.size()*4];
 
-    vertexCount = whichVertex.size()*4;
+    this->vertexCount = whichVertex.size();
+
+    std::cout<<this->vertexCount<<std::endl;
 
     for(int i=0; i<(int)whichVertex.size(); i++){
         //std::cout<<whichVertex[i]<<std::endl;
         for(int j=0;j<3;j++){
-            vertices[4*i+j] = tmp_vertices[whichVertex[i]*3+j];
-            normals[4*i+j] = tmp_normals[whichNormal[i]*3+j];
+            this->vertices[4*i+j] = tmp_vertices[whichVertex[i]*3+j];
+            this->normals[4*i+j] = tmp_normals[whichNormal[i]*3+j];
         }
-        vertices[4*i+3] = 1.0f;
-        normals[4*i+3] = 0.0f;
+        this->vertices[4*i+3] = 1.0f;
+        this->normals[4*i+3] = 0.0f;
         for(int j=0;j<2;j++){
-            texCoords[2*i+j] = tmp_texCoords[whichTexCord[i]*2+j];
+            this->texCoords[2*i+j] = tmp_texCoords[whichTexCord[i]*2+j];
         }
     }
+
+    setGlobalColor(1.0f,0.0f,0.0f,1.0f);
 
     std::cout<<"Parsing finished"<<std::endl;
 
@@ -191,50 +199,84 @@ bool ModelHolder::loadFromOBJ(std::string path){
     whichTexCord.clear();
     whichNormal.clear();
 
+    for(int i=0;i<(int)vertexCount;i++){
+        std::cout<<i<<" || "<<vertices[4*i+0]<<" "<<vertices[4*i+1]<<" "<<vertices[4*i+2]<<" "<<vertices[4*i+3]<<" || "<<
+        normals[4*i+0]<<" "<<normals[4*i+1]<<" "<<normals[4*i+2]<<" "<<normals[4*i+3]<<" || "<<
+        colors[4*i+0]<<" "<<colors[4*i+1]<<" "<<colors[4*i+2]<<" "<<colors[4*i+3]<<" "<<std::endl;
+    }
+
     return true;
 }
 
 void ModelHolder::setGlobalColor(float r, float g, float b, float a){
-    if(colors == nullptr){
-        colors = new float[vertexCount];
+    //delete[] this->colors;
+    //this->colors = nullptr;
+    if(!this->colors){
+        std::cout<<"empty colors"<<std::endl;
+        this->colors = new float[this->vertexCount*4];
     }
-    for(int i=0;i<vertexCount/4;i++){
-        colors[i*4+0] = r;
-        colors[i*4+1] = g;
-        colors[i*4+2] = b;
-        colors[i*4+3] = a;
+
+    for(int i=0;i<(int)vertexCount;i++){
+        this->colors[i*4+0] = r;
+        this->colors[i*4+1] = g;
+        this->colors[i*4+2] = b;
+        this->colors[i*4+3] = a;
     }
 }
 
 void ModelHolder::drawObject(mat4 mP, mat4 mV, mat4 mM){
-	shaderProgram->use();
+	this->shaderProgram->use();
 
-	glUniformMatrix4fv(shaderProgram->getUniformLocation("P"),1, false, glm::value_ptr(mP));
-	glUniformMatrix4fv(shaderProgram->getUniformLocation("V"),1, false, glm::value_ptr(mV));
-	glUniformMatrix4fv(shaderProgram->getUniformLocation("M"),1, false, glm::value_ptr(mM));
+	glUniformMatrix4fv(this->shaderProgram->getUniformLocation("P"),1, false, glm::value_ptr(mP));
+	glUniformMatrix4fv(this->shaderProgram->getUniformLocation("V"),1, false, glm::value_ptr(mV));
+	glUniformMatrix4fv(this->shaderProgram->getUniformLocation("M"),1, false, glm::value_ptr(mM));
 
-	glBindVertexArray(vao);
+	glBindVertexArray(this->vao);
 
-	glDrawArrays(GL_TRIANGLES,0,vertexCount);
+	glDrawArrays(GL_TRIANGLES,0,this->vertexCount);
 
 	glBindVertexArray(0);
 }
 
 void ModelHolder::prepareObject(){
     //Zbuduj VBO z danymi obiektu do narysowania
-	bufVertices=makeBuffer(vertices, vertexCount, sizeof(float)*4); //VBO ze współrzędnymi wierzchołków
-	bufColors=makeBuffer(colors, vertexCount, sizeof(float)*4);//VBO z kolorami wierzchołków
-	bufNormals=makeBuffer(normals, vertexCount, sizeof(float)*4);//VBO z wektorami normalnymi wierzchołków
+	this->bufVertices=makeBuffer(this->vertices, this->vertexCount, sizeof(float)*4); //VBO ze współrzędnymi wierzchołków
+	this->bufColors=makeBuffer(this->colors, this->vertexCount, sizeof(float)*4);//VBO z kolorami wierzchołków
+	this->bufNormals=makeBuffer(this->normals, this->vertexCount, sizeof(float)*4);//VBO z wektorami normalnymi wierzchołków
 
 	//Zbuduj VAO wiążący atrybuty z konkretnymi VBO
-	glGenVertexArrays(1,&vao); //Wygeneruj uchwyt na VAO i zapisz go do zmiennej globalnej
+	glGenVertexArrays(1,&this->vao); //Wygeneruj uchwyt na VAO i zapisz go do zmiennej globalnej
 
-	glBindVertexArray(vao); //Uaktywnij nowo utworzony VAO
+	glBindVertexArray(this->vao); //Uaktywnij nowo utworzony VAO
 
-	assignVBOtoAttribute(shaderProgram,"vertex",bufVertices,4); //"vertex" odnosi się do deklaracji "in vec4 vertex;" w vertex shaderze
-	assignVBOtoAttribute(shaderProgram,"color",bufColors,4); //"color" odnosi się do deklaracji "in vec4 color;" w vertex shaderze
-	assignVBOtoAttribute(shaderProgram,"normal",bufNormals,4); //"normal" odnosi się do deklaracji "in vec4 normal;" w vertex shaderze
+	assignVBOtoAttribute(this->shaderProgram,"vertex",this->bufVertices,4); //"vertex" odnosi się do deklaracji "in vec4 vertex;" w vertex shaderze
+	assignVBOtoAttribute(this->shaderProgram,"color",this->bufColors,4); //"color" odnosi się do deklaracji "in vec4 color;" w vertex shaderze
+	assignVBOtoAttribute(this->shaderProgram,"normal",this->bufNormals,4); //"normal" odnosi się do deklaracji "in vec4 normal;" w vertex shaderze
 
 	glBindVertexArray(0); //Dezaktywuj VAO
 
+}
+
+void ModelHolder::IWantToBeaTeapot(){
+    delete[] this->vertices;
+    delete[] this->colors;
+    delete[] this->normals;
+
+    this->vertices = nullptr;
+    this->colors = nullptr;
+    this->normals = nullptr;
+
+    this->vertices = Models::TeapotInternal::vertices;
+    this->colors = Models::TeapotInternal::colors;
+    this->normals = Models::TeapotInternal::vertexNormals;
+    this->vertexCount = Models::TeapotInternal::vertexCount;
+
+    //setGlobalColor(1.0f,0.0f,0.0f,1.0f);
+
+    glDeleteVertexArrays(1,&this->vao);
+	glDeleteBuffers(1,&this->bufVertices);
+	glDeleteBuffers(1,&this->bufColors);
+	glDeleteBuffers(1,&this->bufNormals);
+
+	prepareObject();
 }

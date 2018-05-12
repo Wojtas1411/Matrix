@@ -48,6 +48,8 @@
 			<Add directory="glfw/lib" />
 			<Add directory="glew/lib" />
 		</Linker>
+		<Unit filename="OpenGlFunctions.cpp" />
+		<Unit filename="OpenGlFunctions.h" />
 		<Unit filename="allmodels.h" />
 		<Unit filename="constants.h" />
 		<Unit filename="cube.cpp" />

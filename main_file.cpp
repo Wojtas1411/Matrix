@@ -228,7 +228,7 @@ void drawScene(GLFWwindow* window, float angle_x, float angle_y, double deltaTim
     position -= direction * angle_x;
     position += right * angle_y;
 
-    ///***end***///
+    ///***end mouse positioning***///
 
 	glm::mat4 V = glm::lookAt(
         position,           // Camera is here
@@ -239,7 +239,7 @@ void drawScene(GLFWwindow* window, float angle_x, float angle_y, double deltaTim
     x->drawObject(P,V,M);
 
 	//Narysuj obiekt
-	///drawObject(vao,shaderProgram,P,V,M);
+	///drawObject(vao,shaderProgram,P,V,M);///rysuje czajnik zwykly
 
 	//Przerzuć tylny bufor na przedni
 	glfwSwapBuffers(window);
@@ -288,7 +288,8 @@ int main(void)
 	std::cout<<"Polygon start"<<std::endl;
 
 	ModelHolder *x = new ModelHolder();
-	x->setGlobalColor(1,0,0,1);
+
+	//x->IWantToBeaTeapot(); ///generalnie z ta funkcja cos sie pieprzy w deconstructorze
 
     std::cout<<"Polygon end"<<std::endl;
 	///***------end------***///

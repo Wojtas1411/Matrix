@@ -29,7 +29,10 @@ class ModelHolder
         virtual ~ModelHolder();
 
         void drawObject(mat4 mP, mat4 mV, mat4 mM);
-        void setGlobalColor(float r, float g, float b, float a);
+
+        void setObject(float *vert, float* tex, float* norms, int n);
+
+        void IWantToBeaTeapot();
 
 
     protected:
@@ -38,7 +41,10 @@ class ModelHolder
     private:
         std::string name;
 
-        int vertexCount = 0;
+        ///TODO M matrix for object;
+        ///TODO move-me ability;
+
+        unsigned int vertexCount = 0;
         float *vertices;
 		float *normals;
 		float *vertexNormals;
@@ -58,6 +64,8 @@ class ModelHolder
 
         void parseF(std::string line);
         void prepareObject();
+
+        void setGlobalColor(float r, float g, float b, float a);
 };
 
 #endif // MODELHOLDER_H
