@@ -1266,10 +1266,10 @@
 1524776204 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\teapot.cpp
 	"teapot.h"
 
-1526129200 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\src\modelholder.cpp
+1526129802 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\src\modelholder.cpp
 	"ModelHolder.h"
 
-1526127135 d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\include\modelholder.h
+1526129928 d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\include\modelholder.h
 	<iostream>
 	<fstream>
 	<vector>
@@ -1287,7 +1287,7 @@
 	"shaderprogram.h"
 	"OpenGlFunctions.h"
 
-1526129547 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\main_file.cpp
+1526129866 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\main_file.cpp
 	<iostream>
 	<GL/glew.h>
 	<GLFW/glfw3.h>

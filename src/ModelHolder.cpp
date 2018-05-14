@@ -24,15 +24,15 @@ ModelHolder::~ModelHolder()
 {
     std::cout<<"Destructor started"<<std::endl;
     delete[] this->vertices;
-    std::cout<<"vertices deleted"<<std::endl;
+    //std::cout<<"vertices deleted"<<std::endl;
     delete[] this->normals;
-    std::cout<<"normals deleted"<<std::endl;
+    //std::cout<<"normals deleted"<<std::endl;
     delete[] this->vertexNormals;
-    std::cout<<"VN deleted"<<std::endl;
+    //std::cout<<"VN deleted"<<std::endl;
     delete[] this->texCoords;
-    std::cout<<"texC deleted"<<std::endl;
+    //std::cout<<"texC deleted"<<std::endl;
     delete[] this->colors;
-    std::cout<<"colors deleted"<<std::endl;
+    //std::cout<<"colors deleted"<<std::endl;
 
     std::cout<<"tabs deleted"<<std::endl;
 
