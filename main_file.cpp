@@ -236,7 +236,14 @@ void drawScene(GLFWwindow* window, float angle_x, float angle_y, double deltaTim
         up                  // Head is up (set to 0,-1,0 to look upside-down)
     );
 
-    x->drawObject(P,V,M);
+    vec4 tmp_pos = glm::vec4(position,1);
+
+    x->drawObject(P,V,M,tmp_pos);
+    M = translate(M,vec3(5,0,0));
+    x->drawObject(P,V,M,tmp_pos);
+    M = mat4(1.0f);
+    M = translate(M,vec3(0,4,0));
+    x->drawObject(P,V,M,tmp_pos);
 
 	//Narysuj obiekt
 	///drawObject(vao,shaderProgram,P,V,M);///rysuje czajnik zwykly

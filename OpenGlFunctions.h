@@ -8,6 +8,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <stdlib.h>
 #include <stdio.h>
+#include <vector>
 #include "constants.h"
 #include "allmodels.h"
 #include "lodepng.h"
@@ -16,5 +17,7 @@
 GLuint makeBuffer(void *data, int vertexCount, int vertexSize);
 
 void assignVBOtoAttribute(ShaderProgram *shaderProgram,const char* attributeName, GLuint bufVBO, int vertexSize);
+
+GLuint readTexture(char* filename);
 
 #endif // OPENGLFUNCTIONS_H_INCLUDED

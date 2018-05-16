@@ -17,6 +17,10 @@ ModelHolder::ModelHolder()
     }
 
     shaderProgram = new ShaderProgram("vshader.vert",NULL,"fshader.frag");
+
+    tex0=readTexture("metal.png");
+	tex1=readTexture("metal_spec.png");
+
     prepareObject();
 }
 
@@ -41,6 +45,9 @@ ModelHolder::~ModelHolder()
 	glDeleteBuffers(1,&this->bufVertices); //Usuniêcie VBO z wierzcho³kami
 	glDeleteBuffers(1,&this->bufColors); //Usuniêcie VBO z kolorami
 	glDeleteBuffers(1,&this->bufNormals); //Usuniêcie VBO z wektorami normalnymi
+	glDeleteBuffers(1,&this->bufTexCoords); //Usunięcie VBO ze współrzednymi teksturowania
+	glDeleteTextures(1,&this->tex0); //Usunięcie tekstury z tex0
+	glDeleteTextures(1,&this->tex1); //Usunięcie tekstury z tex1
     std::cout<<"Destructor finished"<<std::endl;
 }
 
@@ -199,11 +206,13 @@ bool ModelHolder::loadFromOBJ(std::string path){
     whichTexCord.clear();
     whichNormal.clear();
 
+    /***
     for(int i=0;i<(int)vertexCount;i++){
         std::cout<<i<<" || "<<vertices[4*i+0]<<" "<<vertices[4*i+1]<<" "<<vertices[4*i+2]<<" "<<vertices[4*i+3]<<" || "<<
         normals[4*i+0]<<" "<<normals[4*i+1]<<" "<<normals[4*i+2]<<" "<<normals[4*i+3]<<" || "<<
         colors[4*i+0]<<" "<<colors[4*i+1]<<" "<<colors[4*i+2]<<" "<<colors[4*i+3]<<" "<<std::endl;
     }
+    ***/
 
     return true;
 }
@@ -224,12 +233,22 @@ void ModelHolder::setGlobalColor(float r, float g, float b, float a){
     }
 }
 
-void ModelHolder::drawObject(mat4 mP, mat4 mV, mat4 mM){
+void ModelHolder::drawObject(mat4 mP, mat4 mV, mat4 mM, vec4 pos){
 	this->shaderProgram->use();
 
 	glUniformMatrix4fv(this->shaderProgram->getUniformLocation("P"),1, false, glm::value_ptr(mP));
 	glUniformMatrix4fv(this->shaderProgram->getUniformLocation("V"),1, false, glm::value_ptr(mV));
 	glUniformMatrix4fv(this->shaderProgram->getUniformLocation("M"),1, false, glm::value_ptr(mM));
+    glUniform1i(this->shaderProgram->getUniformLocation("textureMap0"),0);
+	glUniform1i(this->shaderProgram->getUniformLocation("textureMap1"),1);
+	glUniform4f(this->shaderProgram->getUniformLocation("position"),pos.x,pos.y,pos.z,pos.a);
+
+	//Powiąż teksturę z uchwytem w tex0 z zerową jednostką teksturującą
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D,this->tex0);
+	//Powiąż teksturę z uchwytem w tex1 z zerową jednostką teksturującą
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D,this->tex1);
 
 	glBindVertexArray(this->vao);
 
@@ -243,6 +262,7 @@ void ModelHolder::prepareObject(){
 	this->bufVertices=makeBuffer(this->vertices, this->vertexCount, sizeof(float)*4); //VBO ze współrzędnymi wierzchołków
 	this->bufColors=makeBuffer(this->colors, this->vertexCount, sizeof(float)*4);//VBO z kolorami wierzchołków
 	this->bufNormals=makeBuffer(this->normals, this->vertexCount, sizeof(float)*4);//VBO z wektorami normalnymi wierzchołków
+    this->bufTexCoords=makeBuffer(this->texCoords, this->vertexCount,sizeof(float)*2);
 
 	//Zbuduj VAO wiążący atrybuty z konkretnymi VBO
 	glGenVertexArrays(1,&this->vao); //Wygeneruj uchwyt na VAO i zapisz go do zmiennej globalnej
@@ -252,6 +272,7 @@ void ModelHolder::prepareObject(){
 	assignVBOtoAttribute(this->shaderProgram,"vertex",this->bufVertices,4); //"vertex" odnosi się do deklaracji "in vec4 vertex;" w vertex shaderze
 	assignVBOtoAttribute(this->shaderProgram,"color",this->bufColors,4); //"color" odnosi się do deklaracji "in vec4 color;" w vertex shaderze
 	assignVBOtoAttribute(this->shaderProgram,"normal",this->bufNormals,4); //"normal" odnosi się do deklaracji "in vec4 normal;" w vertex shaderze
+    assignVBOtoAttribute(this->shaderProgram,"texCoord0",this->bufTexCoords,2);
 
 	glBindVertexArray(0); //Dezaktywuj VAO
 

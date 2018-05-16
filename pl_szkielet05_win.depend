@@ -1147,10 +1147,10 @@
 1524776204 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\model.cpp
 	"model.h"
 
-1525892182 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\openglfunctions.cpp
+1526475940 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\openglfunctions.cpp
 	"OpenGlFunctions.h"
 
-1525892313 d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\openglfunctions.h
+1526475972 d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\openglfunctions.h
 	<GL/glew.h>
 	<GLFW/glfw3.h>
 	<glm/glm.hpp>
@@ -1158,6 +1158,7 @@
 	<glm/gtc/matrix_transform.hpp>
 	<stdlib.h>
 	<stdio.h>
+	<vector>
 	"constants.h"
 	"allmodels.h"
 	"lodepng.h"
@@ -1266,10 +1267,10 @@
 1524776204 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\teapot.cpp
 	"teapot.h"
 
-1526129802 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\src\modelholder.cpp
+1526477431 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\src\modelholder.cpp
 	"ModelHolder.h"
 
-1526129928 d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\include\modelholder.h
+1526477201 d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\include\modelholder.h
 	<iostream>
 	<fstream>
 	<vector>
@@ -1287,7 +1288,7 @@
 	"shaderprogram.h"
 	"OpenGlFunctions.h"
 
-1526129866 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\main_file.cpp
+1526477564 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\main_file.cpp
 	<iostream>
 	<GL/glew.h>
 	<GLFW/glfw3.h>

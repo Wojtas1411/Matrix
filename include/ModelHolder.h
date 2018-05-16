@@ -28,7 +28,7 @@ class ModelHolder
         //ModelHolder(std::string name, std::string path);
         virtual ~ModelHolder();
 
-        void drawObject(mat4 mP, mat4 mV, mat4 mM);
+        void drawObject(mat4 mP, mat4 mV, mat4 mM, vec4 pos);
 
         void setObject(float *vert, float* tex, float* norms, int n);
 
@@ -40,9 +40,6 @@ class ModelHolder
 
     private:
         std::string name;
-
-        ///TODO M matrix for object;
-        ///TODO move-me ability;
 
         unsigned int vertexCount = 0;
         float *vertices;
@@ -57,6 +54,10 @@ class ModelHolder
         GLuint bufVertices; //Uchwyt na bufor VBO przechowuj¹cy tablicê wspó³rzêdnych wierzcho³ków
         GLuint bufColors;  //Uchwyt na bufor VBO przechowuj¹cy tablicê kolorów
         GLuint bufNormals; //Uchwyt na bufor VBO przechowuj¹cy tablickê wektorów normalnych
+        GLuint bufTexCoords; //VBO teskturowania
+
+        GLuint tex0; //tekstura front
+        GLuint tex1; //tekstura background
 
         std::vector<int> whichVertex;
         std::vector<int> whichTexCord;

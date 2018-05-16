@@ -4,9 +4,9 @@
 GLuint makeBuffer(void *data, int vertexCount, int vertexSize) {
 	GLuint handle;
 
-	glGenBuffers(1,&handle);//Wygeneruj uchwyt na Vertex Buffer Object (VBO), który bêdzie zawiera³ tablicê danych
+	glGenBuffers(1,&handle);//Wygeneruj uchwyt na Vertex Buffer Object (VBO), ktÃ³ry bÃªdzie zawieraÂ³ tablicÃª danych
 	glBindBuffer(GL_ARRAY_BUFFER,handle);  //Uaktywnij wygenerowany uchwyt VBO
-	glBufferData(GL_ARRAY_BUFFER, vertexCount*vertexSize, data, GL_STATIC_DRAW);//Wgraj tablicê do VBO
+	glBufferData(GL_ARRAY_BUFFER, vertexCount*vertexSize, data, GL_STATIC_DRAW);//Wgraj tablicÃª do VBO
 
 	return handle;
 }
@@ -15,6 +15,29 @@ GLuint makeBuffer(void *data, int vertexCount, int vertexSize) {
 void assignVBOtoAttribute(ShaderProgram *shaderProgram,const char* attributeName, GLuint bufVBO, int vertexSize) {
 	GLuint location=shaderProgram->getAttribLocation(attributeName); //Pobierz numer slotu dla atrybutu
 	glBindBuffer(GL_ARRAY_BUFFER,bufVBO);  //Uaktywnij uchwyt VBO
-	glEnableVertexAttribArray(location); //W³¹cz u¿ywanie atrybutu o numerze slotu zapisanym w zmiennej location
-	glVertexAttribPointer(location,vertexSize,GL_FLOAT, GL_FALSE, 0, NULL); //Dane do slotu location maj¹ byæ brane z aktywnego VBO
+	glEnableVertexAttribArray(location); //WÂ³Â¹cz uÂ¿ywanie atrybutu o numerze slotu zapisanym w zmiennej location
+	glVertexAttribPointer(location,vertexSize,GL_FLOAT, GL_FALSE, 0, NULL); //Dane do slotu location majÂ¹ byÃ¦ brane z aktywnego VBO
+}
+
+GLuint readTexture(char* filename) {
+    GLuint tex;
+    glActiveTexture(GL_TEXTURE0);
+
+    //Wczytanie do pamiÄ™ci komputera
+    std::vector<unsigned char> image;   //Alokuj wektor do wczytania obrazka
+    unsigned width, height;   //Zmienne do ktÃ³rych wczytamy wymiary obrazka
+    //Wczytaj obrazek
+    unsigned error = lodepng::decode(image, width, height, filename);
+
+    //Import do pamiÄ™ci karty graficznej
+    glGenTextures(1,&tex); //Zainicjuj jeden uchwyt
+    glBindTexture(GL_TEXTURE_2D, tex); //Uaktywnij uchwyt
+    //Wczytaj obrazek do pamiÄ™ci KG skojarzonej z uchwytem
+    glTexImage2D(GL_TEXTURE_2D, 0, 4, width, height, 0,
+    GL_RGBA, GL_UNSIGNED_BYTE, (unsigned char*) image.data());
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+
+    return tex;
 }
