@@ -1147,10 +1147,10 @@
 1524776204 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\model.cpp
 	"model.h"
 
-1526475940 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\openglfunctions.cpp
+1526481749 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\openglfunctions.cpp
 	"OpenGlFunctions.h"
 
-1526475972 d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\openglfunctions.h
+1526481749 d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\openglfunctions.h
 	<GL/glew.h>
 	<GLFW/glfw3.h>
 	<glm/glm.hpp>
@@ -1267,10 +1267,10 @@
 1524776204 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\teapot.cpp
 	"teapot.h"
 
-1526477431 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\src\modelholder.cpp
+1526913615 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\src\modelholder.cpp
 	"ModelHolder.h"
 
-1526477201 d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\include\modelholder.h
+1526912769 d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\include\modelholder.h
 	<iostream>
 	<fstream>
 	<vector>
@@ -1288,7 +1288,7 @@
 	"shaderprogram.h"
 	"OpenGlFunctions.h"
 
-1526477564 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\main_file.cpp
+1527026444 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\main_file.cpp
 	<iostream>
 	<GL/glew.h>
 	<GLFW/glfw3.h>
@@ -1303,4 +1303,35 @@
 	"shaderprogram.h"
 	"ModelHolder.h"
 	"OpenGlFunctions.h"
+	"dach.h"
+	"Box.h"
+
+1526913703 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\src\dach.cpp
+	"dach.h"
+
+1526912915 d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\include\dach.h
+	<ModelHolder.h>
+
+1526914958 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\src\building.cpp
+	"Building.h"
+
+1526916316 d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\include\building.h
+	<iostream>
+	<GL/glew.h>
+	<GLFW/glfw3.h>
+	<glm/glm.hpp>
+	<glm/gtc/type_ptr.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<stdlib.h>
+	<stdio.h>
+	"constants.h"
+	"allmodels.h"
+	"lodepng.h"
+	"shaderprogram.h"
+	"ModelHolder.h"
+	"OpenGlFunctions.h"
+	"dach.h"
+
+1527026178 d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\include\box.h
+	<ModelHolder.h>
 

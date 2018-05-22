@@ -19,7 +19,7 @@ void assignVBOtoAttribute(ShaderProgram *shaderProgram,const char* attributeName
 	glVertexAttribPointer(location,vertexSize,GL_FLOAT, GL_FALSE, 0, NULL); //Dane do slotu location maj¹ byæ brane z aktywnego VBO
 }
 
-GLuint readTexture(char* filename) {
+GLuint readTexture(const char* filename) {
     GLuint tex;
     glActiveTexture(GL_TEXTURE0);
 

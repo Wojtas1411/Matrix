@@ -9,7 +9,9 @@ ModelHolder::ModelHolder()
     this->texCoords = nullptr;
     this->colors = nullptr;
 
-    std::cout<<"hello there"<<std::endl;
+    //this->loadModel("test2.obj","metal.png","metal_spec.png");
+
+    /*std::cout<<"hello there"<<std::endl;
     if(loadFromOBJ("test2.obj")){
         std::cout<<"yep"<<std::endl;
     } else {
@@ -21,7 +23,55 @@ ModelHolder::ModelHolder()
     tex0=readTexture("metal.png");
 	tex1=readTexture("metal_spec.png");
 
+	this->myTexUnit = ModelHolder::nextTexUnit;
+	ModelHolder::nextTexUnit+=2;
+	std::cout<<ModelHolder::nextTexUnit<<std::endl;
+
+    prepareObject();*/
+}
+void ModelHolder::loadModel(std::string pathOBJ, std::string pathTEX0, std::string pathTEX1){
+    if(loadFromOBJ(pathOBJ.c_str())){
+        std::cout<<"yep"<<std::endl;
+    } else {
+        std::cout<<"nope"<<std::endl;
+    }
+
+    shaderProgram = new ShaderProgram("vshader.vert",NULL,"fshader.frag");
+
+    tex0=readTexture(pathTEX0.c_str());
+	tex1=readTexture(pathTEX1.c_str());
+
+	myTexUnit = ModelHolder::nextTexUnit;
+	ModelHolder::nextTexUnit+=2;
+	std::cout<<ModelHolder::nextTexUnit<<std::endl;
+
     prepareObject();
+}
+ModelHolder::ModelHolder(std::string pathOBJ, std::string pathTEX0, std::string pathTEX1){
+    this->vertices = nullptr;
+    this->normals = nullptr;
+    this->vertexNormals = nullptr;
+    this->texCoords = nullptr;
+    this->colors = nullptr;
+
+    this->loadModel(pathOBJ,pathTEX0,pathTEX1);
+
+    /*if(loadFromOBJ(pathOBJ.c_str())){
+        std::cout<<"yep"<<std::endl;
+    } else {
+        std::cout<<"nope"<<std::endl;
+    }
+
+    shaderProgram = new ShaderProgram("vshader.vert",NULL,"fshader.frag");
+
+    tex0=readTexture(pathTEX0.c_str());
+	tex1=readTexture(pathTEX1.c_str());
+
+	myTexUnit = ModelHolder::nextTexUnit;
+	ModelHolder::nextTexUnit+=2;
+	std::cout<<ModelHolder::nextTexUnit<<std::endl;
+
+    prepareObject();*/
 }
 
 ModelHolder::~ModelHolder()
@@ -122,7 +172,7 @@ bool ModelHolder::loadFromOBJ(std::string path){
     in.open(path.c_str());
 
     if(!in.is_open()){
-        std::cout<<"[load OBJ] file error: "<<this->name<<std::endl;
+        std::cout<<"[load OBJ] file error: "<<std::endl;
         return false;
     }
 
@@ -239,15 +289,17 @@ void ModelHolder::drawObject(mat4 mP, mat4 mV, mat4 mM, vec4 pos){
 	glUniformMatrix4fv(this->shaderProgram->getUniformLocation("P"),1, false, glm::value_ptr(mP));
 	glUniformMatrix4fv(this->shaderProgram->getUniformLocation("V"),1, false, glm::value_ptr(mV));
 	glUniformMatrix4fv(this->shaderProgram->getUniformLocation("M"),1, false, glm::value_ptr(mM));
-    glUniform1i(this->shaderProgram->getUniformLocation("textureMap0"),0);
-	glUniform1i(this->shaderProgram->getUniformLocation("textureMap1"),1);
+    glUniform1i(this->shaderProgram->getUniformLocation("textureMap0"),myTexUnit);
+	glUniform1i(this->shaderProgram->getUniformLocation("textureMap1"),myTexUnit+1);
 	glUniform4f(this->shaderProgram->getUniformLocation("position"),pos.x,pos.y,pos.z,pos.a);
 
+
+
 	//Powiąż teksturę z uchwytem w tex0 z zerową jednostką teksturującą
-	glActiveTexture(GL_TEXTURE0);
+	glActiveTexture(GL_TEXTURE0+myTexUnit);
 	glBindTexture(GL_TEXTURE_2D,this->tex0);
 	//Powiąż teksturę z uchwytem w tex1 z zerową jednostką teksturującą
-	glActiveTexture(GL_TEXTURE1);
+	glActiveTexture(GL_TEXTURE0+myTexUnit+1);
 	glBindTexture(GL_TEXTURE_2D,this->tex1);
 
 	glBindVertexArray(this->vao);

@@ -18,6 +18,6 @@ GLuint makeBuffer(void *data, int vertexCount, int vertexSize);
 
 void assignVBOtoAttribute(ShaderProgram *shaderProgram,const char* attributeName, GLuint bufVBO, int vertexSize);
 
-GLuint readTexture(char* filename);
+GLuint readTexture(const char* filename);
 
 #endif // OPENGLFUNCTIONS_H_INCLUDED

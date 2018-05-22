@@ -33,9 +33,13 @@ Place, Fifth Floor, Boston, MA  02110 - 1301  USA
 #include "shaderprogram.h"
 #include "ModelHolder.h"
 #include "OpenGlFunctions.h"
+#include "dach.h"
+#include "Box.h"
 
 
 using namespace glm;
+
+unsigned int ModelHolder::nextTexUnit = 0;
 
 float speed_x = 0; // [radiany/s]
 float speed_y = 0; // [radiany/s]
@@ -180,7 +184,7 @@ void drawObject(GLuint vao, ShaderProgram *shaderProgram, mat4 mP, mat4 mV, mat4
 }
 
 //Procedura rysująca zawartość sceny
-void drawScene(GLFWwindow* window, float angle_x, float angle_y, double deltaTime, ModelHolder* x) {
+void drawScene(GLFWwindow* window, float angle_x, float angle_y, double deltaTime, ModelHolder* x, dach* xD) {
 	//************Tutaj umieszczaj kod rysujący obraz******************l
 
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT); //Wykonaj czyszczenie bufora kolorów
@@ -209,6 +213,7 @@ void drawScene(GLFWwindow* window, float angle_x, float angle_y, double deltaTim
 
     horizontalAngle += mouseSpeed * deltaTime * float(global_width/2 - xpos )*1.0e4;
     verticalAngle   += mouseSpeed * deltaTime * float(global_height/2 - ypos )*1.0e4;
+
     glfwSetCursorPos(window, global_width/2, global_height/2);
 
     glm::vec3 direction(
@@ -244,6 +249,10 @@ void drawScene(GLFWwindow* window, float angle_x, float angle_y, double deltaTim
     M = mat4(1.0f);
     M = translate(M,vec3(0,4,0));
     x->drawObject(P,V,M,tmp_pos);
+    M = translate(M,vec3(0,4,0));
+    xD->drawObject(P,V,M,tmp_pos);
+    M = translate(M,vec3(0,-12,4));
+    xD->drawObject(P,V,M,tmp_pos);
 
 	//Narysuj obiekt
 	///drawObject(vao,shaderProgram,P,V,M);///rysuje czajnik zwykly
@@ -294,9 +303,12 @@ int main(void)
 	///***-----Polygon-----***///
 	std::cout<<"Polygon start"<<std::endl;
 
-	ModelHolder *x = new ModelHolder();
+	//ModelHolder *x = new ModelHolder("test2.obj","metal.png","metal_spec.png");
+	ModelHolder *x = new Box(1);
+	dach *xD = new dach();
 
-	//x->IWantToBeaTeapot(); ///generalnie z ta funkcja cos sie pieprzy w deconstructorze
+	///TODO generate tab of boxes
+	//this shit is temporary
 
     std::cout<<"Polygon end"<<std::endl;
 	///***------end------***///
@@ -308,7 +320,7 @@ int main(void)
 		angle_x += speed_x*glfwGetTime(); //Zwiększ kąt o prędkość kątową razy czas jaki upłynął od poprzedniej klatki
 		angle_y += speed_y*glfwGetTime(); //Zwiększ kąt o prędkość kątową razy czas jaki upłynął od poprzedniej klatki
 		glfwSetTime(0); //Wyzeruj licznik czasu
-		drawScene(window,angle_x,angle_y,glfwGetTime(),x); //Wykonaj procedurę rysującą
+		drawScene(window,angle_x,angle_y,glfwGetTime(),x,xD); //Wykonaj procedurę rysującą
 		glfwPollEvents(); //Wykonaj procedury callback w zalezności od zdarzeń jakie zaszły.
 	}
 
@@ -316,6 +328,7 @@ int main(void)
 	///***-----DeleteHolder-----***///
 
 	delete x;
+	delete xD;
 
 	///***------end------***///
 

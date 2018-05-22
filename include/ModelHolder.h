@@ -25,7 +25,8 @@ class ModelHolder
 {
     public:
         ModelHolder();
-        //ModelHolder(std::string name, std::string path);
+        ModelHolder(std::string pathOBJ, std::string pathTEX0, std::string pathTEX1);
+
         virtual ~ModelHolder();
 
         void drawObject(mat4 mP, mat4 mV, mat4 mM, vec4 pos);
@@ -34,12 +35,19 @@ class ModelHolder
 
         void IWantToBeaTeapot();
 
+        static unsigned int nextTexUnit;
+
 
     protected:
         bool loadFromOBJ(std::string path);
 
+        void loadModel(std::string pathOBJ, std::string pathTEX0, std::string pathTEX1);
+
     private:
-        std::string name;
+        //std::string name;
+
+
+        unsigned int myTexUnit;
 
         unsigned int vertexCount = 0;
         float *vertices;
