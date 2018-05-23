@@ -35,11 +35,12 @@ Place, Fifth Floor, Boston, MA  02110 - 1301  USA
 #include "OpenGlFunctions.h"
 #include "dach.h"
 #include "Box.h"
-
+#include "Building.h"
 
 using namespace glm;
 
 unsigned int ModelHolder::nextTexUnit = 0;
+float Building::segment_heights[] = {0.0, 2.0, 0.0};///height of segment under index of type, preloaded
 
 float speed_x = 0; // [radiany/s]
 float speed_y = 0; // [radiany/s]
@@ -184,12 +185,12 @@ void drawObject(GLuint vao, ShaderProgram *shaderProgram, mat4 mP, mat4 mV, mat4
 }
 
 //Procedura rysująca zawartość sceny
-void drawScene(GLFWwindow* window, float angle_x, float angle_y, double deltaTime, ModelHolder* x, dach* xD) {
+void drawScene(GLFWwindow* window, float angle_x, float angle_y, double deltaTime, Building *y) {
 	//************Tutaj umieszczaj kod rysujący obraz******************l
 
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT); //Wykonaj czyszczenie bufora kolorów
 
-	glm::mat4 P = glm::perspective(50 * PI / 180, aspect, 1.0f, 50.0f); //Wylicz macierz rzutowania
+	glm::mat4 P = glm::perspective(50 * PI / 180, aspect, 1.0f, 100.0f); //Wylicz macierz rzutowania
 
 	/***
 	glm::mat4 V = glm::lookAt( //Wylicz macierz widoku
@@ -243,6 +244,7 @@ void drawScene(GLFWwindow* window, float angle_x, float angle_y, double deltaTim
 
     vec4 tmp_pos = glm::vec4(position,1);
 
+    /***
     x->drawObject(P,V,M,tmp_pos);
     M = translate(M,vec3(5,0,0));
     x->drawObject(P,V,M,tmp_pos);
@@ -253,6 +255,9 @@ void drawScene(GLFWwindow* window, float angle_x, float angle_y, double deltaTim
     xD->drawObject(P,V,M,tmp_pos);
     M = translate(M,vec3(0,-12,4));
     xD->drawObject(P,V,M,tmp_pos);
+    ***/
+
+    y->drawBuilding(P,V,tmp_pos);
 
 	//Narysuj obiekt
 	///drawObject(vao,shaderProgram,P,V,M);///rysuje czajnik zwykly
@@ -306,6 +311,7 @@ int main(void)
 	//ModelHolder *x = new ModelHolder("test2.obj","metal.png","metal_spec.png");
 	ModelHolder *x = new Box(1);
 	dach *xD = new dach();
+	Building *y = new Building(0,-5,1,x,xD);
 
 	///TODO generate tab of boxes
 	//this shit is temporary
@@ -320,7 +326,7 @@ int main(void)
 		angle_x += speed_x*glfwGetTime(); //Zwiększ kąt o prędkość kątową razy czas jaki upłynął od poprzedniej klatki
 		angle_y += speed_y*glfwGetTime(); //Zwiększ kąt o prędkość kątową razy czas jaki upłynął od poprzedniej klatki
 		glfwSetTime(0); //Wyzeruj licznik czasu
-		drawScene(window,angle_x,angle_y,glfwGetTime(),x,xD); //Wykonaj procedurę rysującą
+		drawScene(window,angle_x,angle_y,glfwGetTime(),y); //Wykonaj procedurę rysującą
 		glfwPollEvents(); //Wykonaj procedury callback w zalezności od zdarzeń jakie zaszły.
 	}
 
@@ -329,6 +335,7 @@ int main(void)
 
 	delete x;
 	delete xD;
+	delete y;
 
 	///***------end------***///
 

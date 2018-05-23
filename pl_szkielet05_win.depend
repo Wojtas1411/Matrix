@@ -1288,7 +1288,7 @@
 	"shaderprogram.h"
 	"OpenGlFunctions.h"
 
-1527026444 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\main_file.cpp
+1527075895 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\main_file.cpp
 	<iostream>
 	<GL/glew.h>
 	<GLFW/glfw3.h>
@@ -1305,17 +1305,18 @@
 	"OpenGlFunctions.h"
 	"dach.h"
 	"Box.h"
+	"Building.h"
 
-1526913703 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\src\dach.cpp
+1527027360 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\src\dach.cpp
 	"dach.h"
 
 1526912915 d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\include\dach.h
 	<ModelHolder.h>
 
-1526914958 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\src\building.cpp
+1527076293 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\src\building.cpp
 	"Building.h"
 
-1526916316 d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\include\building.h
+1527076184 d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\include\building.h
 	<iostream>
 	<GL/glew.h>
 	<GLFW/glfw3.h>
@@ -1324,6 +1325,7 @@
 	<glm/gtc/matrix_transform.hpp>
 	<stdlib.h>
 	<stdio.h>
+	<random>
 	"constants.h"
 	"allmodels.h"
 	"lodepng.h"
@@ -1332,6 +1334,9 @@
 	"OpenGlFunctions.h"
 	"dach.h"
 
-1527026178 d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\include\box.h
+1527027416 d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\include\box.h
 	<ModelHolder.h>
+
+1527026965 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\src\box.cpp
+	"Box.h"
 
