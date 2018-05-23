@@ -1288,7 +1288,7 @@
 	"shaderprogram.h"
 	"OpenGlFunctions.h"
 
-1527075895 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\main_file.cpp
+1527085857 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\main_file.cpp
 	<iostream>
 	<GL/glew.h>
 	<GLFW/glfw3.h>
@@ -1306,6 +1306,7 @@
 	"dach.h"
 	"Box.h"
 	"Building.h"
+	"CityMap.h"
 
 1527027360 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\src\dach.cpp
 	"dach.h"
@@ -1313,10 +1314,10 @@
 1526912915 d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\include\dach.h
 	<ModelHolder.h>
 
-1527076293 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\src\building.cpp
+1527082908 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\src\building.cpp
 	"Building.h"
 
-1527076184 d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\include\building.h
+1527082839 d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\include\building.h
 	<iostream>
 	<GL/glew.h>
 	<GLFW/glfw3.h>
@@ -1339,4 +1340,26 @@
 
 1527026965 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\src\box.cpp
 	"Box.h"
+
+1527085583 d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\include\citymap.h
+	<iostream>
+	<GL/glew.h>
+	<GLFW/glfw3.h>
+	<glm/glm.hpp>
+	<glm/gtc/type_ptr.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<stdlib.h>
+	<stdio.h>
+	<random>
+	"constants.h"
+	"allmodels.h"
+	"lodepng.h"
+	"shaderprogram.h"
+	"ModelHolder.h"
+	"OpenGlFunctions.h"
+	"dach.h"
+	"Building.h"
+
+1527085505 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\src\citymap.cpp
+	"CityMap.h"
 

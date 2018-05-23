@@ -31,7 +31,7 @@ class Building
 {
     public:
         //Building();
-        Building(int mX, int mY,int type, ModelHolder *boxes, ModelHolder *dach);
+        Building(int mX, int mY,int type, ModelHolder **boxes, ModelHolder *dach);
         virtual ~Building();
 
         void drawBuilding(glm::mat4 P, glm::mat4 V, glm::vec4 pos);
@@ -45,7 +45,7 @@ class Building
         int mX, mY; ///map coords
         float pX, pY; ///real coords considering building sizes, streets, etc
 
-        ModelHolder *box;
+        ModelHolder **box;
         ModelHolder *dach;
 
         std::vector<glm::mat4> M_vector;

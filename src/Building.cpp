@@ -11,7 +11,7 @@ Building::Building()
     //this->dach = dach;
 }
 */
-Building::Building(int mX, int mY,int type, ModelHolder *boxes, ModelHolder *dach){
+Building::Building(int mX, int mY,int type, ModelHolder **boxes, ModelHolder *dach){
     this->mX = mX;
     this->mY = mY;
     this->my_type = type;
@@ -59,7 +59,8 @@ void Building::generate_M_vector(){
 
 void Building::drawBuilding(glm::mat4 P, glm::mat4 V, glm::vec4 pos){
     for(int i=0;i<number_of_segments;i++){
-        this->box->drawObject(P,V,M_vector[i],pos);
+        //this->box->drawObject(P,V,M_vector[i],pos);
+        this->box[my_type]->drawObject(P,V,M_vector[i],pos);
     }
     this->dach->drawObject(P,V,M_vector[number_of_segments],pos);
 }

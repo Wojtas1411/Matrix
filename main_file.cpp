@@ -36,6 +36,7 @@ Place, Fifth Floor, Boston, MA  02110 - 1301  USA
 #include "dach.h"
 #include "Box.h"
 #include "Building.h"
+#include "CityMap.h"
 
 using namespace glm;
 
@@ -185,7 +186,7 @@ void drawObject(GLuint vao, ShaderProgram *shaderProgram, mat4 mP, mat4 mV, mat4
 }
 
 //Procedura rysująca zawartość sceny
-void drawScene(GLFWwindow* window, float angle_x, float angle_y, double deltaTime, Building *y) {
+void drawScene(GLFWwindow* window, float angle_x, float angle_y, double deltaTime, CityMap *y, Building *k) {
 	//************Tutaj umieszczaj kod rysujący obraz******************l
 
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT); //Wykonaj czyszczenie bufora kolorów
@@ -204,9 +205,9 @@ void drawScene(GLFWwindow* window, float angle_x, float angle_y, double deltaTim
 	M = glm::rotate(M, angle_y, glm::vec3(0, 1, 0));
 	***/
 
-	glm::mat4 M = glm::mat4(1.0f);
+	//glm::mat4 M = glm::mat4(1.0f);
 
-	glm::vec3 position = glm::vec3( 0, 0, 5 );
+	glm::vec3 position = glm::vec3( 0, 1, 5 );
 
     ///mouse positioning
     double xpos, ypos;
@@ -257,7 +258,9 @@ void drawScene(GLFWwindow* window, float angle_x, float angle_y, double deltaTim
     xD->drawObject(P,V,M,tmp_pos);
     ***/
 
-    y->drawBuilding(P,V,tmp_pos);
+    //k->drawBuilding(P,V,tmp_pos);
+
+    y->drawCityMap(P,V,tmp_pos);
 
 	//Narysuj obiekt
 	///drawObject(vao,shaderProgram,P,V,M);///rysuje czajnik zwykly
@@ -309,9 +312,13 @@ int main(void)
 	std::cout<<"Polygon start"<<std::endl;
 
 	//ModelHolder *x = new ModelHolder("test2.obj","metal.png","metal_spec.png");
-	ModelHolder *x = new Box(1);
+	ModelHolder **x = new ModelHolder*[10];
+	for(int i=0;i<10;i++)x[i]=nullptr;
+	x[1] = new Box(1);
 	dach *xD = new dach();
 	Building *y = new Building(0,-5,1,x,xD);
+	//std::cout<<"xD"<<std::endl;
+	CityMap *myCity = new CityMap(0,0,x,xD);
 
 	///TODO generate tab of boxes
 	//this shit is temporary
@@ -326,7 +333,7 @@ int main(void)
 		angle_x += speed_x*glfwGetTime(); //Zwiększ kąt o prędkość kątową razy czas jaki upłynął od poprzedniej klatki
 		angle_y += speed_y*glfwGetTime(); //Zwiększ kąt o prędkość kątową razy czas jaki upłynął od poprzedniej klatki
 		glfwSetTime(0); //Wyzeruj licznik czasu
-		drawScene(window,angle_x,angle_y,glfwGetTime(),y); //Wykonaj procedurę rysującą
+		drawScene(window,angle_x,angle_y,glfwGetTime(),myCity,y); //Wykonaj procedurę rysującą
 		glfwPollEvents(); //Wykonaj procedury callback w zalezności od zdarzeń jakie zaszły.
 	}
 
@@ -336,6 +343,7 @@ int main(void)
 	delete x;
 	delete xD;
 	delete y;
+	delete myCity;
 
 	///***------end------***///
 
