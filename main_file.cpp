@@ -186,7 +186,7 @@ void drawObject(GLuint vao, ShaderProgram *shaderProgram, mat4 mP, mat4 mV, mat4
 }
 
 //Procedura rysująca zawartość sceny
-void drawScene(GLFWwindow* window, float angle_x, float angle_y, double deltaTime, CityMap *y, Building *k) {
+void drawScene(GLFWwindow* window, float angle_x, float angle_y, double deltaTime, CityMap *y, ModelHolder *ll) {
 	//************Tutaj umieszczaj kod rysujący obraz******************l
 
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT); //Wykonaj czyszczenie bufora kolorów
@@ -205,9 +205,9 @@ void drawScene(GLFWwindow* window, float angle_x, float angle_y, double deltaTim
 	M = glm::rotate(M, angle_y, glm::vec3(0, 1, 0));
 	***/
 
-	//glm::mat4 M = glm::mat4(1.0f);
+	glm::mat4 M = glm::mat4(1.0f);
 
-	glm::vec3 position = glm::vec3( 0, 1, 5 );
+	glm::vec3 position = glm::vec3( 0, 3, 5 );
 
     ///mouse positioning
     double xpos, ypos;
@@ -245,25 +245,15 @@ void drawScene(GLFWwindow* window, float angle_x, float angle_y, double deltaTim
 
     vec4 tmp_pos = glm::vec4(position,1);
 
-    /***
-    x->drawObject(P,V,M,tmp_pos);
-    M = translate(M,vec3(5,0,0));
-    x->drawObject(P,V,M,tmp_pos);
-    M = mat4(1.0f);
-    M = translate(M,vec3(0,4,0));
-    x->drawObject(P,V,M,tmp_pos);
-    M = translate(M,vec3(0,4,0));
-    xD->drawObject(P,V,M,tmp_pos);
-    M = translate(M,vec3(0,-12,4));
-    xD->drawObject(P,V,M,tmp_pos);
-    ***/
+    M = rotate(M,(float)radians(90.0),vec3(0,1,0));
+    M = translate(M,vec3(0,-10,5));
 
-    //k->drawBuilding(P,V,tmp_pos);
+
+    ///drawing section
+
+    ll->drawObject(P,V,M,tmp_pos);
 
     y->drawCityMap(P,V,tmp_pos);
-
-	//Narysuj obiekt
-	///drawObject(vao,shaderProgram,P,V,M);///rysuje czajnik zwykly
 
 	//Przerzuć tylny bufor na przedni
 	glfwSwapBuffers(window);
@@ -311,17 +301,22 @@ int main(void)
 	///***-----Polygon-----***///
 	std::cout<<"Polygon start"<<std::endl;
 
-	//ModelHolder *x = new ModelHolder("test2.obj","metal.png","metal_spec.png");
-	ModelHolder **x = new ModelHolder*[10];
-	for(int i=0;i<10;i++)x[i]=nullptr;
-	x[1] = new Box(1);
-	dach *xD = new dach();
-	Building *y = new Building(0,-5,1,x,xD);
-	//std::cout<<"xD"<<std::endl;
-	CityMap *myCity = new CityMap(0,0,x,xD);
+	//ModelHolder *x = new ModelHolder("test2.obj","metal.png","metal_spec.png");//testing
+	///tabs roads
+	ModelHolder **roads = new ModelHolder*[2];
+	roads[0] = new ModelHolder("objects/road2.obj","textures/roads/road0.png","textures/roads/road0.png");//skrzyżowanie
+	roads[1] = new ModelHolder("objects/road1.obj","textures/roads/road1.png","textures/roads/road1.png");//droga
 
-	///TODO generate tab of boxes
-	//this shit is temporary
+    ///tab of boxes
+	ModelHolder **boxes = new ModelHolder*[10];
+	for(int i=0;i<10;i++)boxes[i]=nullptr;
+	boxes[1] = new Box(1);
+
+	///generating roof
+	dach *roof = new dach();
+
+	///generating citymap
+	CityMap *myCity = new CityMap(0,0,boxes,roof,roads);
 
     std::cout<<"Polygon end"<<std::endl;
 	///***------end------***///
@@ -333,16 +328,21 @@ int main(void)
 		angle_x += speed_x*glfwGetTime(); //Zwiększ kąt o prędkość kątową razy czas jaki upłynął od poprzedniej klatki
 		angle_y += speed_y*glfwGetTime(); //Zwiększ kąt o prędkość kątową razy czas jaki upłynął od poprzedniej klatki
 		glfwSetTime(0); //Wyzeruj licznik czasu
-		drawScene(window,angle_x,angle_y,glfwGetTime(),myCity,y); //Wykonaj procedurę rysującą
+		drawScene(window,angle_x,angle_y,glfwGetTime(),myCity,roads[1]); //Wykonaj procedurę rysującą
 		glfwPollEvents(); //Wykonaj procedury callback w zalezności od zdarzeń jakie zaszły.
 	}
 
+	std::cout<<"Exit"<<std::endl;
 
-	///***-----DeleteHolder-----***///
 
-	delete x;
-	delete xD;
-	delete y;
+	///***-----DeleteSection-----***///
+
+	delete roads[0];
+	delete roads[1];
+	delete[] roads;
+	for(int i=0;i<10;i++){delete boxes[i];}
+	delete[] boxes;
+	delete roof;
 	delete myCity;
 
 	///***------end------***///

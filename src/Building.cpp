@@ -1,4 +1,5 @@
 #include "Building.h"
+Building::Building(){}
 /*
 Building::Building()
 {
@@ -31,15 +32,18 @@ Building::~Building()
 }
 
 void Building::generate_number_of_segments(){
-    std::default_random_engine generator;
-    std::normal_distribution<float> distribution(64.0,16.0);
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::default_random_engine generator (seed);
+    std::uniform_real_distribution<float>distribution(40.0f,88.0f);
+    //std::normal_distribution<float> distribution(64.0,16.0);
     float height = distribution(generator);
     this->number_of_segments = height/(this->segment_heights[this->my_type]*this->global_scalar);
+    //std::cout<<height<<" "<<number_of_segments<<std::endl;
 }
 
 void Building::generate_real_coords(){
-    pX = (float)(mX+1)*2.0f*this->global_scalar;
-    pY = (float)(mY+1)*2.0f*this->global_scalar;
+    pX = (float)(mX)*2.0f*this->global_scalar;
+    pY = (float)(mY)*2.0f*this->global_scalar;
 }
 
 void Building::generate_M_ground(){
@@ -58,9 +62,16 @@ void Building::generate_M_vector(){
 }
 
 void Building::drawBuilding(glm::mat4 P, glm::mat4 V, glm::vec4 pos){
+    //std::cout<<my_type<<std::endl;
     for(int i=0;i<number_of_segments;i++){
         //this->box->drawObject(P,V,M_vector[i],pos);
         this->box[my_type]->drawObject(P,V,M_vector[i],pos);
     }
     this->dach->drawObject(P,V,M_vector[number_of_segments],pos);
+}
+
+void Building::print_data(){
+    std::cout<<mX<<" "<<mY<<std::endl;
+    std::cout<<pX<<" "<<pY<<std::endl;
+    std::cout<<my_type<<" "<<number_of_segments<<std::endl;
 }

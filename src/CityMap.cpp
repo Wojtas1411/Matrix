@@ -1,11 +1,11 @@
 #include "CityMap.h"
 
-CityMap::CityMap(int mX, int mY, ModelHolder **tab_of_blocks, ModelHolder *dach)
+CityMap::CityMap(int mX, int mY, ModelHolder **tab_of_blocks, ModelHolder *dach, ModelHolder **roads)
 {
     this->mX = mX;
     this->mY = mY;
     //ctor
-    generate_map(tab_of_blocks,dach);
+    generate_map(tab_of_blocks,dach,roads);
 }
 
 CityMap::~CityMap()
@@ -26,8 +26,9 @@ CityMap::~CityMap()
 ///*** 0-x(15?) -> types of buildings, not defined yet
 ///*** -2 -> this means road
 
-void CityMap::generate_map(ModelHolder **x, ModelHolder *dach){
-    std::default_random_engine generator;
+void CityMap::generate_map(ModelHolder **x, ModelHolder *dach, ModelHolder **roads){
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::default_random_engine generator(seed);
     std::uniform_int_distribution<int> distribution(0,10);
     if(this->mapa == nullptr){
         mapa = new int*[this->map_size];
@@ -52,7 +53,14 @@ void CityMap::generate_map(ModelHolder **x, ModelHolder *dach){
             for(int j=0;j<this->map_size;j++){
                 buildings[i][j] = nullptr;
                 if(i%3!=0 and j%3!=0){
+                    //std::cout<<i<<" "<<j<<" "<<mapa[i][j]<<std::endl;
                     buildings[i][j] = new Building(i,j,mapa[i][j],x,dach);
+                }
+                else if(i%3!=2 and j%3!= 2){
+                    if(buildings[i][j] == nullptr){
+                            //std::cout<<"make road"<<std::endl;
+                        buildings[i][j] = new RoadHolder(i, j, roads);
+                    }
                 }
             }
         }
@@ -69,8 +77,11 @@ void CityMap::drawCityMap(glm::mat4 P, glm::mat4 V, glm::vec4 light_position){
     for(int i = max(mX-current_range,0);i<min(mX+current_range,map_size);i++){
         for(int j = max(mY-current_range,0);j<min(mY+current_range,map_size);j++){
             //std::cout<<"xDDD"<<std::endl;
-            if(i%3!=0 and j%3!=0)if(buildings != nullptr)buildings[i][j]->drawBuilding(P,V,light_position);
-            //std::cout<<"xDDDDDDDD"<<std::endl;
+            //if(i%3!=0 and j%3!=0)if(buildings != nullptr)buildings[i][j]->print_data();else std::cout<<"what???"<<std::endl;
+            if(i%3!=0 and j%3!=0){if(buildings != nullptr)buildings[i][j]->drawBuilding(P,V,light_position);}
+            else if(i%3!=2 and j%3!= 2){if(buildings != nullptr)buildings[i][j]->drawBuilding(P,V,light_position);}
+            ///TODO draw roads
+            //std::cout<<i<<" "<<j<<" xDDDDDDDD"<<std::endl;
         }
     }
 }

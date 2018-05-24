@@ -57,7 +57,9 @@
 		<Unit filename="fshader.frag" />
 		<Unit filename="include/Box.h" />
 		<Unit filename="include/Building.h" />
+		<Unit filename="include/CityMap.h" />
 		<Unit filename="include/ModelHolder.h" />
+		<Unit filename="include/RoadHolder.h" />
 		<Unit filename="include/dach.h" />
 		<Unit filename="lodepng.cpp" />
 		<Unit filename="lodepng.h" />
@@ -68,7 +70,9 @@
 		<Unit filename="shaderprogram.h" />
 		<Unit filename="src/Box.cpp" />
 		<Unit filename="src/Building.cpp" />
+		<Unit filename="src/CityMap.cpp" />
 		<Unit filename="src/ModelHolder.cpp" />
+		<Unit filename="src/RoadHolder.cpp" />
 		<Unit filename="src/dach.cpp" />
 		<Unit filename="teapot.cpp" />
 		<Unit filename="teapot.h" />

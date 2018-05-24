@@ -10,20 +10,17 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <random>
-#include "constants.h"
-#include "allmodels.h"
-#include "lodepng.h"
-#include "shaderprogram.h"
+#include <chrono>
 #include "ModelHolder.h"
-#include "OpenGlFunctions.h"
 #include "dach.h"
 #include "Building.h"
+#include "RoadHolder.h"
 
 class CityMap
 {
     public:
         CityMap();
-        CityMap(int mX, int mY, ModelHolder **tab_of_blocks, ModelHolder *dach);
+        CityMap(int mX, int mY, ModelHolder **tab_of_blocks, ModelHolder *dach, ModelHolder **roads);
         virtual ~CityMap();
 
         void setPosition(int mX, int mY);
@@ -35,9 +32,9 @@ class CityMap
         int mX, mY;
 
 
-        int **mapa;
+        int **mapa = nullptr;
 
-        Building ***buildings;
+        Building ***buildings = nullptr;
 
         ///TODO roads;
 
@@ -49,7 +46,7 @@ class CityMap
 
         int current_range = RANGE_SMALL;
 
-        void generate_map(ModelHolder **x, ModelHolder *dach);
+        void generate_map(ModelHolder **x, ModelHolder *dach, ModelHolder **roads);
 
 };
 
