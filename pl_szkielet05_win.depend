@@ -1288,7 +1288,7 @@
 	"shaderprogram.h"
 	"OpenGlFunctions.h"
 
-1527168972 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\main_file.cpp
+1527451400 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\main_file.cpp
 	<iostream>
 	<GL/glew.h>
 	<GLFW/glfw3.h>
@@ -1360,6 +1360,6 @@
 	<Building.h>
 	"constants.h"
 
-1527168562 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\src\roadholder.cpp
+1527169004 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\src\roadholder.cpp
 	"RoadHolder.h"
 

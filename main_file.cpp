@@ -56,6 +56,8 @@ float verticalAngle = 0.0f; // vertical angle : 0, look at the horizon
 
 float mouseSpeed = 0.5f;
 
+glm::vec3 position = glm::vec3( 0, 3, 5 );
+
 //Uchwyty na shadery
 ShaderProgram *shaderProgram; //Wskaźnik na obiekt reprezentujący program cieniujący.
 
@@ -207,14 +209,14 @@ void drawScene(GLFWwindow* window, float angle_x, float angle_y, double deltaTim
 
 	glm::mat4 M = glm::mat4(1.0f);
 
-	glm::vec3 position = glm::vec3( 0, 3, 5 );
+	//glm::vec3 position = glm::vec3( 0, 3, 5 );
 
     ///mouse positioning
     double xpos, ypos;
     glfwGetCursorPos(window, &xpos, &ypos);
 
-    horizontalAngle += mouseSpeed * deltaTime * float(global_width/2 - xpos )*1.0e4;
-    verticalAngle   += mouseSpeed * deltaTime * float(global_height/2 - ypos )*1.0e4;
+    horizontalAngle += mouseSpeed * deltaTime * float(global_width/2 - xpos );//*1.0e4;
+    verticalAngle   += mouseSpeed * deltaTime * float(global_height/2 - ypos );//*1.0e4;
 
     glfwSetCursorPos(window, global_width/2, global_height/2);
 
@@ -246,12 +248,12 @@ void drawScene(GLFWwindow* window, float angle_x, float angle_y, double deltaTim
     vec4 tmp_pos = glm::vec4(position,1);
 
     M = rotate(M,(float)radians(90.0),vec3(0,1,0));
-    M = translate(M,vec3(0,-10,5));
+    M = translate(M,vec3(-10,0,-10));
 
 
     ///drawing section
 
-    ll->drawObject(P,V,M,tmp_pos);
+    //ll->drawObject(P,V,M,tmp_pos);
 
     y->drawCityMap(P,V,tmp_pos);
 
@@ -318,17 +320,21 @@ int main(void)
 	///generating citymap
 	CityMap *myCity = new CityMap(0,0,boxes,roof,roads);
 
+	///res -- testzone
+	//ModelHolder *ff = new ModelHolder("wyspa_v2.obj","wyspa_v0.png","wyspa_v0.png");
+
     std::cout<<"Polygon end"<<std::endl;
 	///***------end------***///
 
-
+    float currenttime = 0;
 	//Główna pętla
 	while (!glfwWindowShouldClose(window)) //Tak długo jak okno nie powinno zostać zamknięte
 	{
-		angle_x += speed_x*glfwGetTime(); //Zwiększ kąt o prędkość kątową razy czas jaki upłynął od poprzedniej klatki
-		angle_y += speed_y*glfwGetTime(); //Zwiększ kąt o prędkość kątową razy czas jaki upłynął od poprzedniej klatki
+	    currenttime = glfwGetTime();
+		angle_x = speed_x*glfwGetTime(); //Zwiększ kąt o prędkość kątową razy czas jaki upłynął od poprzedniej klatki
+		angle_y = speed_y*glfwGetTime(); //Zwiększ kąt o prędkość kątową razy czas jaki upłynął od poprzedniej klatki
 		glfwSetTime(0); //Wyzeruj licznik czasu
-		drawScene(window,angle_x,angle_y,glfwGetTime(),myCity,roads[1]); //Wykonaj procedurę rysującą
+		drawScene(window,angle_x,angle_y,currenttime,myCity,nullptr); //Wykonaj procedurę rysującą
 		glfwPollEvents(); //Wykonaj procedury callback w zalezności od zdarzeń jakie zaszły.
 	}
 
