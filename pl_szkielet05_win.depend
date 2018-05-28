@@ -1288,7 +1288,7 @@
 	"shaderprogram.h"
 	"OpenGlFunctions.h"
 
-1527451400 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\main_file.cpp
+1527522386 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\main_file.cpp
 	<iostream>
 	<GL/glew.h>
 	<GLFW/glfw3.h>
@@ -1307,6 +1307,7 @@
 	"Box.h"
 	"Building.h"
 	"CityMap.h"
+	"EngineGC.h"
 
 1527027360 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\src\dach.cpp
 	"dach.h"
@@ -1314,10 +1315,10 @@
 1526912915 d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\include\dach.h
 	<ModelHolder.h>
 
-1527168277 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\src\building.cpp
+1527507596 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\src\building.cpp
 	"Building.h"
 
-1527167393 d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\include\building.h
+1527507577 d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\include\building.h
 	<iostream>
 	<GL/glew.h>
 	<GLFW/glfw3.h>
@@ -1337,7 +1338,7 @@
 1527026965 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\src\box.cpp
 	"Box.h"
 
-1527167170 d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\include\citymap.h
+1527508584 d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\include\citymap.h
 	<iostream>
 	<GL/glew.h>
 	<GLFW/glfw3.h>
@@ -1353,7 +1354,7 @@
 	"Building.h"
 	"RoadHolder.h"
 
-1527168217 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\src\citymap.cpp
+1527508613 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\src\citymap.cpp
 	"CityMap.h"
 
 1527166841 d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\include\roadholder.h
@@ -1362,4 +1363,15 @@
 
 1527169004 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\src\roadholder.cpp
 	"RoadHolder.h"
+
+1527523890 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\src\enginegc.cpp
+	"EngineGC.h"
+
+1527522153 d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\include\enginegc.h
+	<iostream>
+	<GL/glew.h>
+	<GLFW/glfw3.h>
+	<glm/glm.hpp>
+	<glm/gtc/type_ptr.hpp>
+	<glm/gtc/matrix_transform.hpp>
 

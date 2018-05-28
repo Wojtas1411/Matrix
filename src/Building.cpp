@@ -75,3 +75,7 @@ void Building::print_data(){
     std::cout<<pX<<" "<<pY<<std::endl;
     std::cout<<my_type<<" "<<number_of_segments<<std::endl;
 }
+
+int Building::get_number_of_segments(){
+    return number_of_segments;
+}

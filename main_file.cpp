@@ -37,6 +37,7 @@ Place, Fifth Floor, Boston, MA  02110 - 1301  USA
 #include "Box.h"
 #include "Building.h"
 #include "CityMap.h"
+#include "EngineGC.h"
 
 using namespace glm;
 
@@ -56,7 +57,9 @@ float verticalAngle = 0.0f; // vertical angle : 0, look at the horizon
 
 float mouseSpeed = 0.5f;
 
-glm::vec3 position = glm::vec3( 0, 3, 5 );
+
+glm::vec3 position = glm::vec3( 0, 3, 0 );
+glm::vec3 position_old = glm::vec3( 0, 3, 0 );
 
 //Uchwyty na shadery
 ShaderProgram *shaderProgram; //Wskaźnik na obiekt reprezentujący program cieniujący.
@@ -193,7 +196,7 @@ void drawScene(GLFWwindow* window, float angle_x, float angle_y, double deltaTim
 
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT); //Wykonaj czyszczenie bufora kolorów
 
-	glm::mat4 P = glm::perspective(50 * PI / 180, aspect, 1.0f, 100.0f); //Wylicz macierz rzutowania
+	glm::mat4 P = glm::perspective(50 * PI / 180, aspect, 0.8f, 100.0f); //Wylicz macierz rzutowania
 
 	/***
 	glm::mat4 V = glm::lookAt( //Wylicz macierz widoku
@@ -234,10 +237,23 @@ void drawScene(GLFWwindow* window, float angle_x, float angle_y, double deltaTim
 
     glm::vec3 up = glm::cross( right, direction );
 
+    position_old = position;
+
     position -= direction * angle_x;
     position += right * angle_y;
 
+    ///ograniczanie wyjscia z mapy
+    position.x = max(position.x,-4.0f);
+    position.z = max(position.z,-4.0f);
+
+    position.x = min(position.x,1002*8.0f+4.0f);
+    position.z = min(position.z,1002*8.0f+4.0f);
+
+    position.y = 3.0f; ///gravity xDDD
+
     ///***end mouse positioning***///
+
+    //position_old = position;
 
 	glm::mat4 V = glm::lookAt(
         position,           // Camera is here
@@ -320,6 +336,9 @@ int main(void)
 	///generating citymap
 	CityMap *myCity = new CityMap(0,0,boxes,roof,roads);
 
+	///generating engine for collisions and so on
+	EngineGC *myEngine = new EngineGC(myCity->get_map_height());
+
 	///res -- testzone
 	//ModelHolder *ff = new ModelHolder("wyspa_v2.obj","wyspa_v0.png","wyspa_v0.png");
 
@@ -330,10 +349,17 @@ int main(void)
 	//Główna pętla
 	while (!glfwWindowShouldClose(window)) //Tak długo jak okno nie powinno zostać zamknięte
 	{
+	    std::cout<<"X: "<<position.x<<" Y: "<<position.y<<" Z: "<<position.z<<" CHUNK X: "<<(int)(position.x+4)/8<<" Y: "<<(int)(position.z+4)/8<<" ";//<<std::endl;
+	    myCity->print_map_hei((int)position.x+4, (int)position.z+4);
+	    myCity->setPosition((position.x+4)/8,(position.z+4)/8); ///zmiana pozycji renderowania
+
 	    currenttime = glfwGetTime();
 		angle_x = speed_x*glfwGetTime(); //Zwiększ kąt o prędkość kątową razy czas jaki upłynął od poprzedniej klatki
 		angle_y = speed_y*glfwGetTime(); //Zwiększ kąt o prędkość kątową razy czas jaki upłynął od poprzedniej klatki
 		glfwSetTime(0); //Wyzeruj licznik czasu
+
+		position = myEngine->collisions_simple(position,position_old);///kolizje
+
 		drawScene(window,angle_x,angle_y,currenttime,myCity,nullptr); //Wykonaj procedurę rysującą
 		glfwPollEvents(); //Wykonaj procedury callback w zalezności od zdarzeń jakie zaszły.
 	}

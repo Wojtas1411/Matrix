@@ -6,6 +6,7 @@ CityMap::CityMap(int mX, int mY, ModelHolder **tab_of_blocks, ModelHolder *dach,
     this->mY = mY;
     //ctor
     generate_map(tab_of_blocks,dach,roads);
+    generate_map_hei();
 }
 
 CityMap::~CityMap()
@@ -19,6 +20,10 @@ CityMap::~CityMap()
     }
     delete[] mapa;
     delete[] buildings;
+    for(int i=0;i<this->mapa_hei_size;i++){
+        delete[] mapa_hei[i];
+    }
+    delete[] mapa_hei;
     //dtor
 }
 ///values in map
@@ -84,4 +89,37 @@ void CityMap::drawCityMap(glm::mat4 P, glm::mat4 V, glm::vec4 light_position){
             //std::cout<<i<<" "<<j<<" xDDDDDDDD"<<std::endl;
         }
     }
+}
+
+void CityMap::generate_map_hei(){
+    mapa_hei_size = this->map_size*2*4;
+    mapa_hei = new float*[mapa_hei_size];
+    for(int i=0;i<mapa_hei_size;i++){
+        mapa_hei[i] = new float[mapa_hei_size];
+        for(int j=0;j<mapa_hei_size;j++){
+            switch(mapa[i/8][j/8]){
+            case -2:
+                mapa_hei[i][j] = 0;
+                break;
+            case -1:
+                std::cout<<"ERROR"<<std::endl;
+            default:
+                mapa_hei[i][j] = buildings[i/8][j/8]->get_number_of_segments()*Building::segment_heights[mapa[i/8][j/8]]*4;
+            }
+        }
+    }
+
+}
+
+void CityMap::print_map_hei(int x, int y){
+    if(mapa_hei!= nullptr){
+        std::cout<<mapa_hei[x][y]<<std::endl;
+    }
+    else{
+        std::cout<<"error"<<std::endl;
+    }
+}
+
+float** CityMap::get_map_height(){
+    return this->mapa_hei;
 }

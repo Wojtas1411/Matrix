@@ -26,6 +26,10 @@ class CityMap
         void setPosition(int mX, int mY);
         void drawCityMap(glm::mat4 P, glm::mat4 V, glm::vec4 light_position);
 
+        void print_map_hei(int x, int y);
+
+        float** get_map_height();
+
     protected:
 
     private:
@@ -33,6 +37,8 @@ class CityMap
 
 
         int **mapa = nullptr;
+
+        float **mapa_hei = nullptr;
 
         Building ***buildings = nullptr;
 
@@ -47,6 +53,9 @@ class CityMap
         int current_range = RANGE_SMALL;
 
         void generate_map(ModelHolder **x, ModelHolder *dach, ModelHolder **roads);
+
+        void generate_map_hei();
+        int mapa_hei_size;
 
 };
 

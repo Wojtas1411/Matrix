@@ -36,6 +36,8 @@ class Building
 
         void print_data();
 
+        int get_number_of_segments();
+
     protected:
         float global_scalar = 4.0f;
 
