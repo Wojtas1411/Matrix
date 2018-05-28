@@ -42,7 +42,7 @@ Place, Fifth Floor, Boston, MA  02110 - 1301  USA
 using namespace glm;
 
 unsigned int ModelHolder::nextTexUnit = 0;
-float Building::segment_heights[] = {0.0, 2.0, 0.0};///height of segment under index of type, preloaded
+float Building::segment_heights[] = {1.966, 2.0, 1.67, 2.34, 1.87};///height of segment under index of type, preloaded
 
 float speed_x = 0; // [radiany/s]
 float speed_y = 0; // [radiany/s]
@@ -266,7 +266,7 @@ void drawScene(GLFWwindow* window, float angle_x, float angle_y, double deltaTim
     vec4 tmp_pos = glm::vec4(position,1);
 
     M = rotate(M,(float)radians(90.0),vec3(0,1,0));
-    M = translate(M,vec3(-10,0,-10));
+    //M = translate(M,vec3(0,0,0));
 
 
     ///drawing section
@@ -330,7 +330,11 @@ int main(void)
     ///tab of boxes
 	ModelHolder **boxes = new ModelHolder*[10];
 	for(int i=0;i<10;i++)boxes[i]=nullptr;
+	boxes[0] = new Box(0);
 	boxes[1] = new Box(1);
+	boxes[2] = new Box(2);
+	boxes[3] = new Box(3);
+	boxes[4] = new Box(4);
 
 	///generating roof
 	dach *roof = new dach();
@@ -342,7 +346,8 @@ int main(void)
 	EngineGC *myEngine = new EngineGC(myCity->get_map_height());
 
 	///res -- testzone
-	//ModelHolder *ff = new ModelHolder("wyspa_v2.obj","wyspa_v0.png","wyspa_v0.png");
+	ModelHolder *ff = nullptr;
+	//ff = new ModelHolder("child_v4.obj","child_v4.png","child_v4.png");
 
     std::cout<<"Polygon end"<<std::endl;
 	///***------end------***///
@@ -365,7 +370,7 @@ int main(void)
 		position = myEngine->collisions_simple(position,position_old);
 
 
-		drawScene(window,angle_x,angle_y,currenttime,myCity,nullptr); //Wykonaj procedurę rysującą
+		drawScene(window,angle_x,angle_y,currenttime,myCity,ff); //Wykonaj procedurę rysującą
 		glfwPollEvents(); //Wykonaj procedury callback w zalezności od zdarzeń jakie zaszły.
 	}
 

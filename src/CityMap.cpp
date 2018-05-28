@@ -34,7 +34,7 @@ CityMap::~CityMap()
 void CityMap::generate_map(ModelHolder **x, ModelHolder *dach, ModelHolder **roads){
     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
     std::default_random_engine generator(seed);
-    std::uniform_int_distribution<int> distribution(0,10);
+    std::uniform_int_distribution<int> distribution(0,4);
     if(this->mapa == nullptr){
         mapa = new int*[this->map_size];
         for(int i=0;i<this->map_size;i++){
@@ -45,8 +45,8 @@ void CityMap::generate_map(ModelHolder **x, ModelHolder *dach, ModelHolder **roa
                     mapa[i][j] = -2; ///road
                 }
                 else{
-                    //mapa[i][j] = distribution(generator);
-                    mapa[i][j] = 1;///temporary for testing
+                    mapa[i][j] = distribution(generator);
+                    //mapa[i][j] = 1;///temporary for testing
                 }
             }
         }

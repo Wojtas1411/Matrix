@@ -1288,7 +1288,7 @@
 	"shaderprogram.h"
 	"OpenGlFunctions.h"
 
-1527529190 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\main_file.cpp
+1527538109 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\main_file.cpp
 	<iostream>
 	<GL/glew.h>
 	<GLFW/glfw3.h>
@@ -1354,7 +1354,7 @@
 	"Building.h"
 	"RoadHolder.h"
 
-1527508613 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\src\citymap.cpp
+1527537816 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\src\citymap.cpp
 	"CityMap.h"
 
 1527166841 d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\include\roadholder.h
