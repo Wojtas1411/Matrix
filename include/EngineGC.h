@@ -7,6 +7,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <cmath>
 
 ///this is gravity end collisions engine
 class EngineGC
@@ -16,6 +17,9 @@ class EngineGC
         virtual ~EngineGC();
 
         glm::vec3 collisions_simple(glm::vec3 position, glm::vec3 position_old);
+        glm::vec3 collisions_advanced(glm::vec3 position, glm::vec3 position_old);
+
+        glm::vec3 gravity_falling(glm::vec3 position);
 
 
 
@@ -31,6 +35,7 @@ class EngineGC
         float v_jump;
         float v_max_jump = 30;
         float v_inc_jump = 0.1;
+        float v_falling = 0;
 
         float **map_hei;
 

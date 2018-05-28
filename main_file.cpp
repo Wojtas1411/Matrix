@@ -58,8 +58,8 @@ float verticalAngle = 0.0f; // vertical angle : 0, look at the horizon
 float mouseSpeed = 0.5f;
 
 
-glm::vec3 position = glm::vec3( 0, 3, 0 );
-glm::vec3 position_old = glm::vec3( 0, 3, 0 );
+glm::vec3 position = glm::vec3( 8, 100, 8 );
+glm::vec3 position_old = position;
 
 //Uchwyty na shadery
 ShaderProgram *shaderProgram; //Wskaźnik na obiekt reprezentujący program cieniujący.
@@ -97,6 +97,7 @@ void key_callback(GLFWwindow* window, int key,
 		if (key == GLFW_KEY_D) speed_y = 3.14;
 		if (key == GLFW_KEY_W) speed_x = -3.14;
 		if (key == GLFW_KEY_S) speed_x = 3.14;
+		if (key == GLFW_KEY_LEFT_SHIFT) {speed_x *= 3; speed_y *= 3;}
 		if (key == GLFW_KEY_ESCAPE) glfwSetWindowShouldClose(window, GLFW_TRUE);
 	}
 
@@ -105,6 +106,7 @@ void key_callback(GLFWwindow* window, int key,
 		if (key == GLFW_KEY_D) speed_y = 0;
 		if (key == GLFW_KEY_W) speed_x = 0;
 		if (key == GLFW_KEY_S) speed_x = 0;
+		if (key == GLFW_KEY_LEFT_SHIFT) {speed_x /= 3; speed_y /= 3;}
 	}
 }
 
@@ -249,7 +251,7 @@ void drawScene(GLFWwindow* window, float angle_x, float angle_y, double deltaTim
     position.x = min(position.x,1002*8.0f+4.0f);
     position.z = min(position.z,1002*8.0f+4.0f);
 
-    position.y = 3.0f; ///gravity xDDD
+    //position.y = 3.0f; ///gravity xDDD
 
     ///***end mouse positioning***///
 
@@ -358,7 +360,10 @@ int main(void)
 		angle_y = speed_y*glfwGetTime(); //Zwiększ kąt o prędkość kątową razy czas jaki upłynął od poprzedniej klatki
 		glfwSetTime(0); //Wyzeruj licznik czasu
 
-		position = myEngine->collisions_simple(position,position_old);///kolizje
+		position = myEngine->gravity_falling(position);///grawitacja
+		//if(position.y<50) {position = myEngine->collisions_advanced(position,position_old);}
+		position = myEngine->collisions_simple(position,position_old);
+
 
 		drawScene(window,angle_x,angle_y,currenttime,myCity,nullptr); //Wykonaj procedurę rysującą
 		glfwPollEvents(); //Wykonaj procedury callback w zalezności od zdarzeń jakie zaszły.

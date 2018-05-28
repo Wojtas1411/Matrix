@@ -15,7 +15,18 @@ glm::vec3 EngineGC::collisions_simple(glm::vec3 position, glm::vec3 position_old
     int x = (int)position.x+4;
     int y = (int)position.z+4;
     float h = position.y - 3.0f;
-    if(h < map_hei[x][y]){
+    if(h+0.3f < map_hei[x][y]){
+            std::cout<<"collision"<<std::endl;
+            return position_old;
+    }
+    return position;
+}
+
+glm::vec3 EngineGC::collisions_advanced(glm::vec3 position, glm::vec3 position_old){
+    int x = (int)position.x+4;
+    int y = (int)position.z+4;
+    float h = position.y - 3.0f;
+    if(h+0.3f < map_hei[x][y]){
             std::cout<<"collision"<<std::endl;
             return position_old;
     }
@@ -23,10 +34,30 @@ glm::vec3 EngineGC::collisions_simple(glm::vec3 position, glm::vec3 position_old
         for(int j=-1;j<=1;j++){
             if(i==0 and j==0){
                 ///do nothing
-            }else if(h<map_hei[x+i][y+j]){
+            }else if(h+0.3f<map_hei[x+i][y+j]){
                 return position_old;
             }
         }
     }
+    return position;
+}
+
+glm::vec3 EngineGC::gravity_falling(glm::vec3 position){
+    int x = (int)position.x+4;
+    int y = (int)position.z+4;
+    float h = position.y - 3.0f;
+
+    if(h<=map_hei[x][y]+0.3f){
+        v_falling = 0;
+        h = map_hei[x][y];
+    }
+    else{
+        v_falling += g_gravity*time_period;
+        h -= v_falling*time_period;
+    }
+
+    position.y = h+3.0f;
+
+
     return position;
 }
