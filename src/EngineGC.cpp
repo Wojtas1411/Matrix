@@ -16,7 +16,7 @@ glm::vec3 EngineGC::collisions_simple(glm::vec3 position, glm::vec3 position_old
     int y = (int)position.z+4;
     float h = position.y - 3.0f;
     if(h+0.3f < map_hei[x][y]){
-            std::cout<<"collision"<<std::endl;
+            std::cout<<"collision simple "<<map_hei[x][y]<<std::endl;
             return position_old;
     }
     return position;
@@ -27,7 +27,7 @@ glm::vec3 EngineGC::collisions_advanced(glm::vec3 position, glm::vec3 position_o
     int y = (int)position.z+4;
     float h = position.y - 3.0f;
     if(h+0.3f < map_hei[x][y]){
-            std::cout<<"collision"<<std::endl;
+            std::cout<<"collision advanced "<<map_hei[x][y]<<std::endl;
             return position_old;
     }
     for(int i=-1;i<=1;i++){
@@ -60,4 +60,20 @@ glm::vec3 EngineGC::gravity_falling(glm::vec3 position){
 
 
     return position;
+}
+
+bool EngineGC::check_advanced_collisions_avalible(glm::vec3 position){
+    int x = (int)position.x+4;
+    int y = (int)position.z+4;
+    float h = position.y - 3.0f;
+    for(int i=-1;i<=1;i++){
+        for(int j=-1;j<=1;j++){
+            if(i==0 and j==0){
+                ///do nothing
+            }else if(h+0.3f<map_hei[x+i][y+j]){
+                return false;
+            }
+        }
+    }
+    return true;
 }

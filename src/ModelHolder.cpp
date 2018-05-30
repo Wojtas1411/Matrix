@@ -36,7 +36,7 @@ void ModelHolder::loadModel(std::string pathOBJ, std::string pathTEX0, std::stri
         std::cout<<"nope"<<std::endl;
     }
 
-    shaderProgram = new ShaderProgram("vshader.vert",NULL,"fshader.frag");
+    shaderProgram = new ShaderProgram("vshader1.vert",NULL,"fshader1.frag");
 
     tex0=readTexture(pathTEX0.c_str());
 	tex1=readTexture(pathTEX1.c_str());
@@ -291,7 +291,8 @@ void ModelHolder::drawObject(mat4 mP, mat4 mV, mat4 mM, vec4 pos){
 	glUniformMatrix4fv(this->shaderProgram->getUniformLocation("M"),1, false, glm::value_ptr(mM));
     glUniform1i(this->shaderProgram->getUniformLocation("textureMap0"),myTexUnit);
 	glUniform1i(this->shaderProgram->getUniformLocation("textureMap1"),myTexUnit+1);
-	glUniform4f(this->shaderProgram->getUniformLocation("position"),pos.x,pos.y,pos.z,pos.a);
+	glUniform4f(this->shaderProgram->getUniformLocation("position0"),pos.x,pos.y,pos.z,pos.a);
+	glUniform4f(this->shaderProgram->getUniformLocation("position1"),500.0f,150.0f,500.0f,1.0f);
 
 
 

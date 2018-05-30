@@ -366,8 +366,8 @@ int main(void)
 		glfwSetTime(0); //Wyzeruj licznik czasu
 
 		position = myEngine->gravity_falling(position);///grawitacja
-		//if(position.y<50) {position = myEngine->collisions_advanced(position,position_old);}
-		position = myEngine->collisions_simple(position,position_old);
+		if(position.y<50) {position = myEngine->collisions_advanced(position,position_old);}
+		else{position = myEngine->collisions_simple(position,position_old);}
 
 
 		drawScene(window,angle_x,angle_y,currenttime,myCity,ff); //Wykonaj procedurę rysującą

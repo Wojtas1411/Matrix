@@ -21,13 +21,15 @@ class EngineGC
 
         glm::vec3 gravity_falling(glm::vec3 position);
 
+        bool check_advanced_collisions_avalible(glm::vec3 position);
+
 
 
 
     protected:
 
     private:
-        float time_period = 1.0f/60.0f;
+        float time_period = 1.0f/40.0f;
         float g_gravity = 9.81;
 
         float s_my_height = 0;

@@ -47,10 +47,10 @@ class CityMap
         int map_size = 1002;
 
         const int RANGE_SMALL = 10;
-        const int RANGE_MEDIUM = 20;
-        const int RANGE_LARGE = 30;
+        const int RANGE_MEDIUM = 15;
+        const int RANGE_LARGE = 20;
 
-        int current_range = RANGE_SMALL;
+        int current_range = RANGE_MEDIUM;
 
         void generate_map(ModelHolder **x, ModelHolder *dach, ModelHolder **roads);
 
