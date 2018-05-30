@@ -9,25 +9,6 @@ ModelHolder::ModelHolder()
     this->texCoords = nullptr;
     this->colors = nullptr;
 
-    //this->loadModel("test2.obj","metal.png","metal_spec.png");
-
-    /*std::cout<<"hello there"<<std::endl;
-    if(loadFromOBJ("test2.obj")){
-        std::cout<<"yep"<<std::endl;
-    } else {
-        std::cout<<"nope"<<std::endl;
-    }
-
-    shaderProgram = new ShaderProgram("vshader.vert",NULL,"fshader.frag");
-
-    tex0=readTexture("metal.png");
-	tex1=readTexture("metal_spec.png");
-
-	this->myTexUnit = ModelHolder::nextTexUnit;
-	ModelHolder::nextTexUnit+=2;
-	std::cout<<ModelHolder::nextTexUnit<<std::endl;
-
-    prepareObject();*/
 }
 void ModelHolder::loadModel(std::string pathOBJ, std::string pathTEX0, std::string pathTEX1){
     if(loadFromOBJ(pathOBJ.c_str())){
@@ -56,22 +37,6 @@ ModelHolder::ModelHolder(std::string pathOBJ, std::string pathTEX0, std::string 
 
     this->loadModel(pathOBJ,pathTEX0,pathTEX1);
 
-    /*if(loadFromOBJ(pathOBJ.c_str())){
-        std::cout<<"yep"<<std::endl;
-    } else {
-        std::cout<<"nope"<<std::endl;
-    }
-
-    shaderProgram = new ShaderProgram("vshader.vert",NULL,"fshader.frag");
-
-    tex0=readTexture(pathTEX0.c_str());
-	tex1=readTexture(pathTEX1.c_str());
-
-	myTexUnit = ModelHolder::nextTexUnit;
-	ModelHolder::nextTexUnit+=2;
-	std::cout<<ModelHolder::nextTexUnit<<std::endl;
-
-    prepareObject();*/
 }
 
 ModelHolder::~ModelHolder()
@@ -292,7 +257,7 @@ void ModelHolder::drawObject(mat4 mP, mat4 mV, mat4 mM, vec4 pos){
     glUniform1i(this->shaderProgram->getUniformLocation("textureMap0"),myTexUnit);
 	glUniform1i(this->shaderProgram->getUniformLocation("textureMap1"),myTexUnit+1);
 	glUniform4f(this->shaderProgram->getUniformLocation("position0"),pos.x,pos.y,pos.z,pos.a);
-	glUniform4f(this->shaderProgram->getUniformLocation("position1"),500.0f,150.0f,500.0f,1.0f);
+	glUniform4f(this->shaderProgram->getUniformLocation("position1"),pos.x,200.0f,pos.z,1.0f);
 
 
 

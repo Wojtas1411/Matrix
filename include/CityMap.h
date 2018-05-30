@@ -42,15 +42,13 @@ class CityMap
 
         Building ***buildings = nullptr;
 
-        ///TODO roads;
-
         int map_size = 1002;
 
         const int RANGE_SMALL = 10;
         const int RANGE_MEDIUM = 15;
         const int RANGE_LARGE = 20;
 
-        int current_range = RANGE_MEDIUM;
+        int current_range = RANGE_SMALL;
 
         void generate_map(ModelHolder **x, ModelHolder *dach, ModelHolder **roads);
 

@@ -40,26 +40,37 @@ Place, Fifth Floor, Boston, MA  02110 - 1301  USA
 #include "EngineGC.h"
 
 using namespace glm;
+///skoki etc
+bool EngineGC::in_air = false;
 
+bool in_air_g = false;
+
+bool trigger_jump = false;
+
+///klasowe
 unsigned int ModelHolder::nextTexUnit = 0;
 float Building::segment_heights[] = {1.966, 2.0, 1.67, 2.34, 1.87};///height of segment under index of type, preloaded
 
+///sekcja sterowanie
 float speed_x = 0; // [radiany/s]
 float speed_y = 0; // [radiany/s]
 
-int global_width = 1024;
-int global_height = 768;
-
-float aspect = (float)global_width/global_height; //Stosunek szerokości do wysokości okna
-
-float horizontalAngle = 3.14f; // horizontal angle : toward -Z
+float horizontalAngle = 1.0f; // horizontal angle : toward -Z
 float verticalAngle = 0.0f; // vertical angle : 0, look at the horizon
 
 float mouseSpeed = 0.5f;
 
-
-glm::vec3 position = glm::vec3( 8, 100, 8 );
+glm::vec3 position = glm::vec3( 8, 120, 8 );
 glm::vec3 position_old = position;
+
+///sekcja ekran
+int global_width = 1024;
+int global_height = 768;
+
+float aspect = (float)global_width/global_height; //Stosunek szerokości do wysokości okna
+///end
+
+
 
 //Uchwyty na shadery
 ShaderProgram *shaderProgram; //Wskaźnik na obiekt reprezentujący program cieniujący.
@@ -92,13 +103,22 @@ void error_callback(int error, const char* description) {
 void key_callback(GLFWwindow* window, int key,
 	int scancode, int action, int mods) {
 
+    if (action == GLFW_PRESS) {
+        if (key == GLFW_KEY_ESCAPE) glfwSetWindowShouldClose(window, GLFW_TRUE);
+        if (key == GLFW_KEY_R){
+            position = glm::vec3( 8, 120, 8 );
+            position_old = position;
+        }
+    }
+
+	if(!in_air_g){
 	if (action == GLFW_PRESS) {
 		if (key == GLFW_KEY_A) speed_y = -3.14;
 		if (key == GLFW_KEY_D) speed_y = 3.14;
 		if (key == GLFW_KEY_W) speed_x = -3.14;
 		if (key == GLFW_KEY_S) speed_x = 3.14;
 		if (key == GLFW_KEY_LEFT_SHIFT) {speed_x *= 3; speed_y *= 3;}
-		if (key == GLFW_KEY_ESCAPE) glfwSetWindowShouldClose(window, GLFW_TRUE);
+		if (key == GLFW_KEY_SPACE) {trigger_jump = true;std::cout<<"jump fucker"<<std::endl;}
 	}
 
 	if (action == GLFW_RELEASE) {
@@ -107,7 +127,10 @@ void key_callback(GLFWwindow* window, int key,
 		if (key == GLFW_KEY_W) speed_x = 0;
 		if (key == GLFW_KEY_S) speed_x = 0;
 		if (key == GLFW_KEY_LEFT_SHIFT) {speed_x /= 3; speed_y /= 3;}
+		if (key == GLFW_KEY_SPACE) trigger_jump = false;
 	}
+	}
+
 }
 
 //Procedura obługi zmiany rozmiaru bufora ramki
@@ -144,7 +167,9 @@ void initOpenGLProgram(GLFWwindow* window) {
 	//************Tutaj umieszczaj kod, który należy wykonać raz, na początku programu************
 	glClearColor(0, 0, 0, 0.4); //Czyść ekran na czarno
 	glEnable(GL_DEPTH_TEST); //Włącz używanie Z-Bufora
+
 	glfwSetKeyCallback(window, key_callback); //Zarejestruj procedurę obsługi klawiatury
+
     glfwSetFramebufferSizeCallback(window,windowResize); //Zarejestruj procedurę obsługi zmiany rozmiaru bufora ramki
 
 	shaderProgram=new ShaderProgram("vshader.vert",NULL,"fshader.frag"); //Wczytaj program cieniujący
@@ -198,7 +223,7 @@ void drawScene(GLFWwindow* window, float angle_x, float angle_y, double deltaTim
 
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT); //Wykonaj czyszczenie bufora kolorów
 
-	glm::mat4 P = glm::perspective(50 * PI / 180, aspect, 0.8f, 100.0f); //Wylicz macierz rzutowania
+	glm::mat4 P = glm::perspective(50 * PI / 180, aspect, 0.8f, 150.0f); //Wylicz macierz rzutowania
 
 	/***
 	glm::mat4 V = glm::lookAt( //Wylicz macierz widoku
@@ -214,14 +239,15 @@ void drawScene(GLFWwindow* window, float angle_x, float angle_y, double deltaTim
 
 	glm::mat4 M = glm::mat4(1.0f);
 
-	//glm::vec3 position = glm::vec3( 0, 3, 5 );
-
     ///mouse positioning
     double xpos, ypos;
     glfwGetCursorPos(window, &xpos, &ypos);
 
     horizontalAngle += mouseSpeed * deltaTime * float(global_width/2 - xpos );//*1.0e4;
     verticalAngle   += mouseSpeed * deltaTime * float(global_height/2 - ypos );//*1.0e4;
+
+    verticalAngle = min(verticalAngle,1.5f);
+    verticalAngle = max(verticalAngle,-1.5f);
 
     glfwSetCursorPos(window, global_width/2, global_height/2);
 
@@ -241,8 +267,11 @@ void drawScene(GLFWwindow* window, float angle_x, float angle_y, double deltaTim
 
     position_old = position;
 
+    ///optionaly turn it off while jumping
+    if(in_air_g){}
     position -= direction * angle_x;
     position += right * angle_y;
+
 
     ///ograniczanie wyjscia z mapy
     position.x = max(position.x,-4.0f);
@@ -356,17 +385,27 @@ int main(void)
 	//Główna pętla
 	while (!glfwWindowShouldClose(window)) //Tak długo jak okno nie powinno zostać zamknięte
 	{
-	    std::cout<<"X: "<<position.x<<" Y: "<<position.y<<" Z: "<<position.z<<" CHUNK X: "<<(int)(position.x+4)/8<<" Y: "<<(int)(position.z+4)/8<<" ";//<<std::endl;
+	    std::cout<<"X: "<<position.x<<" Y: "<<position.y<<" Z: "<<position.z
+	    <<" CHUNK X: "<<(int)(position.x+4)/8<<" Y: "<<(int)(position.z+4)/8<<" ";//<<std::endl;
 	    myCity->print_map_hei((int)position.x+4, (int)position.z+4);
 	    myCity->setPosition((position.x+4)/8,(position.z+4)/8); ///zmiana pozycji renderowania
 
 	    currenttime = glfwGetTime();
-		angle_x = speed_x*glfwGetTime(); //Zwiększ kąt o prędkość kątową razy czas jaki upłynął od poprzedniej klatki
-		angle_y = speed_y*glfwGetTime(); //Zwiększ kąt o prędkość kątową razy czas jaki upłynął od poprzedniej klatki
+		angle_x = speed_x*currenttime; //Zwiększ kąt o prędkość kątową razy czas jaki upłynął od poprzedniej klatki
+		angle_y = speed_y*currenttime; //Zwiększ kąt o prędkość kątową razy czas jaki upłynął od poprzedniej klatki
 		glfwSetTime(0); //Wyzeruj licznik czasu
 
-		position = myEngine->gravity_falling(position);///grawitacja
-		if(position.y<50) {position = myEngine->collisions_advanced(position,position_old);}
+		if(in_air_g == true and EngineGC::in_air == false){ ///zerowanie prędkości po lądowaniu
+            speed_x = 0;
+            speed_y = 0;
+            trigger_jump = false;
+		}
+		in_air_g = EngineGC::in_air; ///uzgadnianie zmiennych z silnika i sterowania
+
+		//position = myEngine->gravity_falling(position);///grawitacja
+		position = myEngine->gravity_advanced(position,trigger_jump);///grawitacja i skoki
+
+		if(position.y<40) {position = myEngine->collisions_advanced(position,position_old);}///kolizje we need an upgrade
 		else{position = myEngine->collisions_simple(position,position_old);}
 
 

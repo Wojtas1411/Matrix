@@ -34,8 +34,9 @@ Building::~Building()
 void Building::generate_number_of_segments(){
     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
     std::default_random_engine generator (seed);
-    std::uniform_real_distribution<float>distribution(40.0f,88.0f);
-    //std::normal_distribution<float> distribution(64.0,16.0);
+    //std::default_random_engine generator (time(0));
+    //std::uniform_real_distribution<float>distribution(40.0f,88.0f);
+    std::normal_distribution<float> distribution(64.0,16.0);
     float height = distribution(generator);
     this->number_of_segments = height/(this->segment_heights[this->my_type]*this->global_scalar);
     //std::cout<<height<<" "<<number_of_segments<<std::endl;

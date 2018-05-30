@@ -11,6 +11,8 @@
 #include <stdio.h>
 #include <random>
 #include <chrono>
+#include <ctime>
+#include <cstdlib>
 #include "ModelHolder.h"
 #include "dach.h"
 /***we use this class to draw a building from boxes
