@@ -55,6 +55,7 @@
 		<Unit filename="cube.cpp" />
 		<Unit filename="cube.h" />
 		<Unit filename="fshader.frag" />
+		<Unit filename="fshader1.frag" />
 		<Unit filename="include/Box.h" />
 		<Unit filename="include/Building.h" />
 		<Unit filename="include/CityMap.h" />
@@ -80,6 +81,7 @@
 		<Unit filename="teapot.h" />
 		<Unit filename="torus.h" />
 		<Unit filename="vshader.vert" />
+		<Unit filename="vshader1.vert" />
 		<Extensions>
 			<code_completion />
 			<envvars />

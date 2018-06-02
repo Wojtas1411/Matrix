@@ -257,7 +257,7 @@ void ModelHolder::drawObject(mat4 mP, mat4 mV, mat4 mM, vec4 pos){
     glUniform1i(this->shaderProgram->getUniformLocation("textureMap0"),myTexUnit);
 	glUniform1i(this->shaderProgram->getUniformLocation("textureMap1"),myTexUnit+1);
 	glUniform4f(this->shaderProgram->getUniformLocation("position0"),pos.x,pos.y,pos.z,pos.a);
-	glUniform4f(this->shaderProgram->getUniformLocation("position1"),pos.x,200.0f,pos.z,1.0f);
+	glUniform4f(this->shaderProgram->getUniformLocation("position1"),pos.x+250.0f,200.0f,pos.z+250.0f,1.0f);
 
 
 
