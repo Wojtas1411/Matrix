@@ -118,7 +118,7 @@ void key_callback(GLFWwindow* window, int key,
 		if (key == GLFW_KEY_W) speed_x = -3.14;
 		if (key == GLFW_KEY_S) speed_x = 3.14;
 		if (key == GLFW_KEY_LEFT_SHIFT) {speed_x *= 3; speed_y *= 3;}
-		if (key == GLFW_KEY_SPACE) {trigger_jump = true;std::cout<<"jump fucker"<<std::endl;}
+		if (key == GLFW_KEY_SPACE) trigger_jump = true;
 	}
 
 	if (action == GLFW_RELEASE) {
@@ -138,6 +138,8 @@ void windowResize(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height); //Obraz ma być generowany w oknie o tej rozdzielczości
     if (height!=0) {
         aspect=(float)width/(float)height; //Stosunek szerokości do wysokości okna
+        global_width = width;
+        global_height = height;
     } else {
         aspect=1;
     }
@@ -268,10 +270,10 @@ void drawScene(GLFWwindow* window, float angle_x, float angle_y, double deltaTim
     position_old = position;
 
     ///optionaly turn it off while jumping
-    if(in_air_g){}
+    if(!in_air_g){}
     position -= direction * angle_x;
     position += right * angle_y;
-
+    //}
 
     ///ograniczanie wyjscia z mapy
     position.x = max(position.x,-4.0f);
@@ -385,14 +387,15 @@ int main(void)
 	//Główna pętla
 	while (!glfwWindowShouldClose(window)) //Tak długo jak okno nie powinno zostać zamknięte
 	{
-	    std::cout<<"X: "<<position.x<<" Y: "<<position.y<<" Z: "<<position.z
-	    <<" CHUNK X: "<<(int)(position.x+4)/8<<" Y: "<<(int)(position.z+4)/8<<" ";//<<std::endl;
-	    myCity->print_map_hei((int)position.x+4, (int)position.z+4);
+	    //std::cout<<"X: "<<position.x<<" Y: "<<position.y<<" Z: "<<position.z
+	    //<<" CHUNK X: "<<(int)(position.x+4)/8<<" Y: "<<(int)(position.z+4)/8<<" ";//<<std::endl;
+	    //myCity->print_map_hei((int)position.x+4, (int)position.z+4);
 	    myCity->setPosition((position.x+4)/8,(position.z+4)/8); ///zmiana pozycji renderowania
 
+
 	    currenttime = glfwGetTime();
-		angle_x = speed_x*currenttime; //Zwiększ kąt o prędkość kątową razy czas jaki upłynął od poprzedniej klatki
-		angle_y = speed_y*currenttime; //Zwiększ kąt o prędkość kątową razy czas jaki upłynął od poprzedniej klatki
+		angle_x = speed_x*currenttime;// + myEngine->x_jump_speed; //Zwiększ kąt o prędkość kątową razy czas jaki upłynął od poprzedniej klatki
+		angle_y = speed_y*currenttime;// + myEngine->y_jump_speed; //Zwiększ kąt o prędkość kątową razy czas jaki upłynął od poprzedniej klatki
 		glfwSetTime(0); //Wyzeruj licznik czasu
 
 		if(in_air_g == true and EngineGC::in_air == false){ ///zerowanie prędkości po lądowaniu
@@ -403,10 +406,11 @@ int main(void)
 		in_air_g = EngineGC::in_air; ///uzgadnianie zmiennych z silnika i sterowania
 
 		//position = myEngine->gravity_falling(position);///grawitacja
-		position = myEngine->gravity_advanced(position,trigger_jump);///grawitacja i skoki
+		position = myEngine->gravity_advanced(position,trigger_jump,verticalAngle,horizontalAngle);///grawitacja i skoki
 
-		if(position.y<40) {position = myEngine->collisions_advanced(position,position_old);}///kolizje we need an upgrade
-		else{position = myEngine->collisions_simple(position,position_old);}
+		position = myEngine->collisions_advanced(position,position_old);
+		//if(position.y<100) {position = myEngine->collisions_advanced(position,position_old);}///kolizje we need an upgrade
+		//else{position = myEngine->collisions_simple(position,position_old);}
 
 
 		drawScene(window,angle_x,angle_y,currenttime,myCity,ff); //Wykonaj procedurę rysującą

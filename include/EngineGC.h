@@ -20,11 +20,14 @@ class EngineGC
         glm::vec3 collisions_advanced(glm::vec3 position, glm::vec3 position_old);
 
         glm::vec3 gravity_falling(glm::vec3 position);
-        glm::vec3 gravity_advanced(glm::vec3 position, bool jump);
+        glm::vec3 gravity_advanced(glm::vec3 position, bool jump, float verticalAngle, float horizontalAngle);
 
         bool check_advanced_collisions_avalible(glm::vec3 position);
 
         static bool in_air;
+
+        float x_jump_speed = 0;
+        float y_jump_speed = 0;
 
 
 
