@@ -2,13 +2,11 @@
 
 ModelHolder::ModelHolder()
 {
-
     this->vertices = nullptr;
     this->normals = nullptr;
     this->vertexNormals = nullptr;
     this->texCoords = nullptr;
     this->colors = nullptr;
-
 }
 void ModelHolder::loadModel(std::string pathOBJ, std::string pathTEX0, std::string pathTEX1){
     if(loadFromOBJ(pathOBJ.c_str())){
@@ -36,6 +34,7 @@ ModelHolder::ModelHolder(std::string pathOBJ, std::string pathTEX0, std::string 
     this->colors = nullptr;
 
     this->loadModel(pathOBJ,pathTEX0,pathTEX1);
+    std::cout<<std::endl;
 
 }
 
@@ -63,7 +62,7 @@ ModelHolder::~ModelHolder()
 	glDeleteBuffers(1,&this->bufTexCoords); //Usunięcie VBO ze współrzednymi teksturowania
 	glDeleteTextures(1,&this->tex0); //Usunięcie tekstury z tex0
 	glDeleteTextures(1,&this->tex1); //Usunięcie tekstury z tex1
-    std::cout<<"Destructor finished"<<std::endl;
+    std::cout<<"Destructor finished"<<std::endl<<std::endl;
 }
 
 void ModelHolder::parseF(std::string line){
@@ -256,8 +255,8 @@ void ModelHolder::drawObject(mat4 mP, mat4 mV, mat4 mM, vec4 pos){
 	glUniformMatrix4fv(this->shaderProgram->getUniformLocation("M"),1, false, glm::value_ptr(mM));
     glUniform1i(this->shaderProgram->getUniformLocation("textureMap0"),myTexUnit);
 	glUniform1i(this->shaderProgram->getUniformLocation("textureMap1"),myTexUnit+1);
-	glUniform4f(this->shaderProgram->getUniformLocation("position0"),pos.x,pos.y,pos.z,pos.a);
-	glUniform4f(this->shaderProgram->getUniformLocation("position1"),pos.x,200.0f,pos.z,1.0f);
+	glUniform4f(this->shaderProgram->getUniformLocation("position0"),pos.x,pos.y,pos.z,pos.a);///actor position
+	glUniform4f(this->shaderProgram->getUniformLocation("position1"),pos.x+400.0f,600.0f,pos.z+400.0f,1.0f);///sun position
 
 
 

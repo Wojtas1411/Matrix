@@ -60,7 +60,7 @@ float verticalAngle = 0.0f; // vertical angle : 0, look at the horizon
 
 float mouseSpeed = 0.5f;
 
-glm::vec3 position = glm::vec3( 8, 120, 8 );
+glm::vec3 position = glm::vec3( 8*500, 120, 8*500 );
 glm::vec3 position_old = position;
 
 ///sekcja ekran
@@ -69,30 +69,6 @@ int global_height = 768;
 
 float aspect = (float)global_width/global_height; //Stosunek szerokości do wysokości okna
 ///end
-
-
-
-//Uchwyty na shadery
-ShaderProgram *shaderProgram; //Wskaźnik na obiekt reprezentujący program cieniujący.
-
-//Uchwyty na VAO i bufory wierzchołków
-GLuint vao;
-GLuint bufVertices; //Uchwyt na bufor VBO przechowujący tablicę współrzędnych wierzchołków
-GLuint bufColors;  //Uchwyt na bufor VBO przechowujący tablicę kolorów
-GLuint bufNormals; //Uchwyt na bufor VBO przechowujący tablickę wektorów normalnych
-
-//Kostka
-/*float* vertices=Models::CubeInternal::vertices;
-float* colors=Models::CubeInternal::colors;
-float* normals=Models::CubeInternal::normals;
-int vertexCount=Models::CubeInternal::vertexCount;*/
-
-//Czajnik
-float* vertices = Models::TeapotInternal::vertices;
-float* colors = Models::TeapotInternal::colors;
-float* normals = Models::TeapotInternal::vertexNormals;
-int vertexCount = Models::TeapotInternal::vertexCount;
-
 
 //Procedura obsługi błędów
 void error_callback(int error, const char* description) {
@@ -145,78 +121,15 @@ void windowResize(GLFWwindow* window, int width, int height) {
     }
 }
 
-//Przygotowanie do rysowania pojedynczego obiektu
-void prepareObject(ShaderProgram *shaderProgram) {
-	//Zbuduj VBO z danymi obiektu do narysowania
-	bufVertices=makeBuffer(vertices, vertexCount, sizeof(float)*4); //VBO ze współrzędnymi wierzchołków
-	bufColors=makeBuffer(colors, vertexCount, sizeof(float)*4);//VBO z kolorami wierzchołków
-	bufNormals=makeBuffer(normals, vertexCount, sizeof(float)*4);//VBO z wektorami normalnymi wierzchołków
-
-	//Zbuduj VAO wiążący atrybuty z konkretnymi VBO
-	glGenVertexArrays(1,&vao); //Wygeneruj uchwyt na VAO i zapisz go do zmiennej globalnej
-
-	glBindVertexArray(vao); //Uaktywnij nowo utworzony VAO
-
-	assignVBOtoAttribute(shaderProgram,"vertex",bufVertices,4); //"vertex" odnosi się do deklaracji "in vec4 vertex;" w vertex shaderze
-	assignVBOtoAttribute(shaderProgram,"color",bufColors,4); //"color" odnosi się do deklaracji "in vec4 color;" w vertex shaderze
-	assignVBOtoAttribute(shaderProgram,"normal",bufNormals,4); //"normal" odnosi się do deklaracji "in vec4 normal;" w vertex shaderze
-
-	glBindVertexArray(0); //Dezaktywuj VAO
-}
-
 //Procedura inicjująca
 void initOpenGLProgram(GLFWwindow* window) {
 	//************Tutaj umieszczaj kod, który należy wykonać raz, na początku programu************
-	glClearColor(0, 0, 0, 0.4); //Czyść ekran na czarno
+	glClearColor(0.25, 0.82, 1, 1); //Czyść ekran na czarno
 	glEnable(GL_DEPTH_TEST); //Włącz używanie Z-Bufora
 
 	glfwSetKeyCallback(window, key_callback); //Zarejestruj procedurę obsługi klawiatury
 
     glfwSetFramebufferSizeCallback(window,windowResize); //Zarejestruj procedurę obsługi zmiany rozmiaru bufora ramki
-
-	shaderProgram=new ShaderProgram("vshader.vert",NULL,"fshader.frag"); //Wczytaj program cieniujący
-
-    prepareObject(shaderProgram);
-}
-
-//Zwolnienie zasobów zajętych przez program
-void freeOpenGLProgram() {
-	delete shaderProgram; //Usunięcie programu cieniującego
-
-	glDeleteVertexArrays(1,&vao); //Usunięcie vao
-	glDeleteBuffers(1,&bufVertices); //Usunięcie VBO z wierzchołkami
-	glDeleteBuffers(1,&bufColors); //Usunięcie VBO z kolorami
-	glDeleteBuffers(1,&bufNormals); //Usunięcie VBO z wektorami normalnymi
-
-
-}
-
-void drawObject(GLuint vao, ShaderProgram *shaderProgram, mat4 mP, mat4 mV, mat4 mM) {
-	//Włączenie programu cieniującego, który ma zostać użyty do rysowania
-	//W tym programie wystarczyłoby wywołać to raz, w setupShaders, ale chodzi o pokazanie,
-	//że mozna zmieniać program cieniujący podczas rysowania jednej sceny
-	shaderProgram->use();
-
-	//Przekaż do shadera macierze P,V i M.
-	//W linijkach poniżej, polecenie:
-	//  shaderProgram->getUniformLocation("P")
-	//pobiera numer slotu odpowiadającego zmiennej jednorodnej o podanej nazwie
-	//UWAGA! "P" w powyższym poleceniu odpowiada deklaracji "uniform mat4 P;" w vertex shaderze,
-	//a mP w glm::value_ptr(mP) odpowiada argumentowi  "mat4 mP;" TYM pliku.
-	//Cała poniższa linijka przekazuje do zmiennej jednorodnej P w vertex shaderze dane z argumentu mP niniejszej funkcji
-	//Pozostałe polecenia działają podobnie.
-	glUniformMatrix4fv(shaderProgram->getUniformLocation("P"),1, false, glm::value_ptr(mP));
-	glUniformMatrix4fv(shaderProgram->getUniformLocation("V"),1, false, glm::value_ptr(mV));
-	glUniformMatrix4fv(shaderProgram->getUniformLocation("M"),1, false, glm::value_ptr(mM));
-
-	//Uaktywnienie VAO i tym samym uaktywnienie predefiniowanych w tym VAO powiązań slotów atrybutów z tablicami z danymi
-	glBindVertexArray(vao);
-
-	//Narysowanie obiektu
-	glDrawArrays(GL_TRIANGLES,0,vertexCount);
-
-	//Posprzątanie po sobie (niekonieczne w sumie jeżeli korzystamy z VAO dla każdego rysowanego obiektu)
-	glBindVertexArray(0);
 }
 
 //Procedura rysująca zawartość sceny
@@ -225,28 +138,18 @@ void drawScene(GLFWwindow* window, float angle_x, float angle_y, double deltaTim
 
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT); //Wykonaj czyszczenie bufora kolorów
 
-	glm::mat4 P = glm::perspective(50 * PI / 180, aspect, 0.8f, 150.0f); //Wylicz macierz rzutowania
+	glm::mat4 P = glm::perspective(50 * PI / 180, aspect, 0.7f, 150.0f); //Wylicz macierz rzutowania
 
-	/***
-	glm::mat4 V = glm::lookAt( //Wylicz macierz widoku
-		glm::vec3(0.0f, 0.0f, -5.0f),
-		glm::vec3(0.0f, 0.0f, 0.0f),
-		glm::vec3(0.0f, 1.0f, 0.0f));
-
-	//Wylicz macierz modelu rysowanego obiektu
-	glm::mat4 M = glm::mat4(1.0f);
-	M = glm::rotate(M, angle_x, glm::vec3(1, 0, 0));
-	M = glm::rotate(M, angle_y, glm::vec3(0, 1, 0));
-	***/
-
-	glm::mat4 M = glm::mat4(1.0f);
+	//glm::mat4 M = glm::mat4(1.0f);
+	//M = rotate(M,(float)radians(90.0),vec3(0,1,0));
+    //M = translate(M,vec3(0,0,0));
 
     ///mouse positioning
     double xpos, ypos;
     glfwGetCursorPos(window, &xpos, &ypos);
 
-    horizontalAngle += mouseSpeed * deltaTime * float(global_width/2 - xpos );//*1.0e4;
-    verticalAngle   += mouseSpeed * deltaTime * float(global_height/2 - ypos );//*1.0e4;
+    horizontalAngle += mouseSpeed * deltaTime * float(global_width/2 - xpos );
+    verticalAngle   += mouseSpeed * deltaTime * float(global_height/2 - ypos );
 
     verticalAngle = min(verticalAngle,1.5f);
     verticalAngle = max(verticalAngle,-1.5f);
@@ -282,11 +185,7 @@ void drawScene(GLFWwindow* window, float angle_x, float angle_y, double deltaTim
     position.x = min(position.x,1002*8.0f+4.0f);
     position.z = min(position.z,1002*8.0f+4.0f);
 
-    //position.y = 3.0f; ///gravity xDDD
-
     ///***end mouse positioning***///
-
-    //position_old = position;
 
 	glm::mat4 V = glm::lookAt(
         position,           // Camera is here
@@ -296,13 +195,7 @@ void drawScene(GLFWwindow* window, float angle_x, float angle_y, double deltaTim
 
     vec4 tmp_pos = glm::vec4(position,1);
 
-    M = rotate(M,(float)radians(90.0),vec3(0,1,0));
-    //M = translate(M,vec3(0,0,0));
-
-
     ///drawing section
-
-    //ll->drawObject(P,V,M,tmp_pos);
 
     y->drawCityMap(P,V,tmp_pos);
 
@@ -350,9 +243,8 @@ int main(void)
 	glfwSetCursorPos(window, global_width/2, global_height/2); //wysrodkuj mysz
 
 	///***-----Polygon-----***///
-	std::cout<<"Polygon start"<<std::endl;
+	std::cout<<"Polygon start"<<std::endl<<std::endl;
 
-	//ModelHolder *x = new ModelHolder("test2.obj","metal.png","metal_spec.png");//testing
 	///tabs roads
 	ModelHolder **roads = new ModelHolder*[2];
 	roads[0] = new ModelHolder("objects/road2.obj","textures/roads/road0.png","textures/roads/road0.png");//skrzyżowanie
@@ -380,7 +272,7 @@ int main(void)
 	ModelHolder *ff = nullptr;
 	//ff = new ModelHolder("child_v4.obj","child_v4.png","child_v4.png");
 
-    std::cout<<"Polygon end"<<std::endl;
+    std::cout<<"Polygon end"<<std::endl<<std::endl;
 	///***------end------***///
 
     float currenttime = 0;
@@ -431,8 +323,6 @@ int main(void)
 	delete myCity;
 
 	///***------end------***///
-
-	freeOpenGLProgram();
 
 	glfwDestroyWindow(window); //Usuń kontekst OpenGL i okno
 	glfwTerminate(); //Zwolnij zasoby zajęte przez GLFW

@@ -11,6 +11,7 @@ Box::Box(int i)
     std::string temp2 = "textures/tex" + num + ".png";
     std::string temp3 = temp2;
     this->loadModel(temp1.c_str(),temp2.c_str(),temp3.c_str());
+    std::cout<<std::endl;
     //ctor
 }
 

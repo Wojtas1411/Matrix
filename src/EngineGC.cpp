@@ -90,8 +90,8 @@ glm::vec3 EngineGC::gravity_advanced(glm::vec3 position, bool jump, float vertic
     float tmp_hor_speed = 0;
 
     if(jump and !in_air){
-        std::cout<<"jump triggered"<<std::endl;
-        v_falling -= v_max_jump*sin(std::max(verticalAngle,0.5f));
+        //std::cout<<"jump triggered"<<std::endl;
+        v_falling -= v_max_jump;//*sin(std::max(verticalAngle,0.5f));
         //tmp_hor_speed = v_max_jump*cos(verticalAngle);
         //y_jump_speed = tmp_hor_speed*cos(horizontalAngle);///improvement needed
         //x_jump_speed = tmp_hor_speed*sin(horizontalAngle);

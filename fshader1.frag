@@ -19,7 +19,7 @@ void main(void) {
     vec4 ks=texture(textureMap1,iTexCoord0); //Kolor obiektu w swietle odbitym
 
     vec4 ld0=vec4(1,1,1,0.3); //Kolor swiatla rozpraszanego
-    vec4 ld1=vec4(1,1,1,0.3); //Kolor swiatla rozpraszanego
+    vec4 ld1=vec4(1,1,1,1); //Kolor swiatla rozpraszanego
 
     vec4 la0=ld0*0.15; //Kolor œwiat³a otoczenia
     vec4 ls0=vec4(1,1,1,0); //Kolor swiatla odbijanego
@@ -44,5 +44,5 @@ void main(void) {
 
 	vec4 pixelColor0=kd*la0+kd*ld0*vec4(nl0,nl0,nl0,1)+ks*ls0*rv0; //Model oswietlenia Phonga
 	vec4 pixelColor1=kd*la0+kd*ld1*vec4(nl1,nl1,nl1,1)+ks*ls1*rv1;
-	pixelColor=2*pixelColor0/4+pixelColor1;
+	pixelColor=pixelColor0/4+pixelColor1*4/3;
 }

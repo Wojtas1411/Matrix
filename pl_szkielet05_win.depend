@@ -1267,7 +1267,7 @@
 1524776204 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\teapot.cpp
 	"teapot.h"
 
-1527690992 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\src\modelholder.cpp
+1528111967 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\src\modelholder.cpp
 	"ModelHolder.h"
 
 1526912769 d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\include\modelholder.h
@@ -1288,7 +1288,7 @@
 	"shaderprogram.h"
 	"OpenGlFunctions.h"
 
-1528055596 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\main_file.cpp
+1528112273 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\main_file.cpp
 	<iostream>
 	<GL/glew.h>
 	<GLFW/glfw3.h>
@@ -1337,7 +1337,7 @@
 1527027416 d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\include\box.h
 	<ModelHolder.h>
 
-1527026965 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\src\box.cpp
+1528112161 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\src\box.cpp
 	"Box.h"
 
 1527690171 d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\include\citymap.h
@@ -1356,7 +1356,7 @@
 	"Building.h"
 	"RoadHolder.h"
 
-1527540378 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\src\citymap.cpp
+1528111248 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\src\citymap.cpp
 	"CityMap.h"
 
 1527166841 d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\include\roadholder.h
@@ -1366,7 +1366,7 @@
 1527169004 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\src\roadholder.cpp
 	"RoadHolder.h"
 
-1528055242 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\src\enginegc.cpp
+1528110906 source:d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\src\enginegc.cpp
 	"EngineGC.h"
 
 1528047944 d:\wojta\documents\put\grafika projekt\pl_szkielet05_win\include\enginegc.h
